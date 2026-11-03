@@ -179,20 +179,46 @@
               <div id="quick-roa-pills" class="flex flex-wrap gap-1.5"></div>
             </div>
 
-            <!-- Release Profile Picker (LI / LP 12h / LP 24h / Bimodale LM) -->
-            <div id="quick-release-container" class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/80 space-y-1.5">
+            <!-- Release Profile Picker (Choix LI vs LP + Menu déroulant pour matrices LP) -->
+            <div id="quick-release-container" class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/80 space-y-2">
               <label class="text-[10px] font-semibold text-slate-300 uppercase tracking-wider block flex items-center justify-between" id="txt-quick-release-label">
                 <span class="flex items-center gap-1.5">
                   <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                  <span id="txt-quick-release-title">Forme / Libération (LI / LP / LM)</span>
+                  <span id="txt-quick-release-title">Forme & Libération</span>
                 </span>
                 <span class="text-[9px] text-amber-400/90 font-semibold" id="quick-release-duration-badge">Standard LI</span>
               </label>
-              <div id="quick-release-pills" class="flex flex-wrap gap-1.5"></div>
+
+              <!-- Choix entre Forme LI et Forme LP -->
+              <div id="quick-release-type-toggle" class="grid grid-cols-2 gap-2">
+                <button type="button" id="btn-release-type-li" onclick="setQuickReleaseMode('IR')"
+                  class="py-1.5 px-2.5 rounded-lg text-[11px] font-bold border transition flex items-center justify-center gap-1.5 cursor-pointer bg-amber-500/25 border-amber-400 text-amber-200 shadow-sm ring-1 ring-amber-400/40">
+                  <span class="w-2 h-2 rounded-full bg-amber-400" id="indicator-release-type-li"></span>
+                  <span id="txt-release-type-li">Forme LI (Immédiate)</span>
+                </button>
+                <button type="button" id="btn-release-type-lp" onclick="setQuickReleaseMode('ER')"
+                  class="py-1.5 px-2.5 rounded-lg text-[11px] font-bold border transition flex items-center justify-center gap-1.5 cursor-pointer bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-900">
+                  <span class="w-2 h-2 rounded-full bg-slate-600" id="indicator-release-type-lp"></span>
+                  <span id="txt-release-type-lp">Forme LP (Prolongée)</span>
+                </button>
+              </div>
+
+              <!-- Menu déroulant défilant avec les différentes formes de matrices LP et la marque -->
+              <div id="quick-lp-dropdown-box" class="space-y-1 hidden pt-0.5">
+                <label class="text-[10px] font-semibold text-amber-300/90 block flex items-center gap-1" id="txt-lp-dropdown-label">
+                  <svg class="w-3 h-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                  <span>Matrice LP & Marque :</span>
+                </label>
+                <select id="quick-lp-select" onchange="onQuickLpSelectChange(this.value)"
+                  class="w-full bg-slate-950 border border-amber-500/50 rounded-lg px-2.5 py-1.5 text-xs text-amber-200 font-bold focus:outline-none focus:border-amber-400 transition cursor-pointer">
+                </select>
+              </div>
+
+              <!-- Description détaillée de la forme ou matrice -->
               <div id="quick-release-desc" class="text-[10px] text-slate-300 bg-slate-950/80 border border-slate-800/90 rounded-lg px-2.5 py-1.5 leading-snug"></div>
             </div>
 
-            <!-- Dose Input and Dosage Tiers -->
+            <!-- Dose Input            <!-- Dose Input and Dosage Tiers -->
             <div>
               <div class="flex items-center justify-between mb-1">
                 <label class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider" id="txt-quick-dose-label">Dose administrée</label>
@@ -1620,19 +1646,27 @@
     // Quick Log Search, Release Profile (LI / LP / LM) & Posology Logic
     let selectedQuickSubstance = null;
     let selectedQuickRoa = null;
-    let selectedQuickReleaseProfile = null;
+    let selectedQuickReleaseMode = 'IR';
+      selectedQuickReleaseProfile = null;
+
+    // Quick Log Search, Release Profile (LI vs LP + Dropdown matrices) & Posology Logic
+    let selectedQuickSubstance = null;
+    let selectedQuickRoa = null;
+    let selectedQuickReleaseMode = 'IR'; // 'IR' or 'ER'
+    let selectedQuickReleaseMode = 'IR';
+      selectedQuickReleaseProfile = null;
 
     const RELEASE_PROFILES_CATALOG = {
       defaultImmediate: {
         id: 'IR',
-        shortFr: 'LI (Immédiate 100%)',
-        shortEn: 'IR (Immediate 100%)',
-        badgeFr: 'LI (100%)',
-        badgeEn: 'IR (100%)',
-        titleFr: "Libération Immédiate (LI — 100% immédiat)",
-        titleEn: "Immediate Release (IR — 100% immediate)",
-        descFr: "100% de la dose est libéré immédiatement après l'administration (montée franche et pic haut).",
-        descEn: "100% of the dose is released immediately after administration (fast rise and full peak).",
+        shortFr: 'LI (100% Immédiate)',
+        shortEn: 'IR (100% Immediate)',
+        badgeFr: 'Standard LI',
+        badgeEn: 'Standard IR',
+        titleFr: "Libération Immédiate (LI — 100% de la dose)",
+        titleEn: "Immediate Release (IR — 100% active dose)",
+        descFr: "Forme galénique conventionnelle à libération immédiate (100% de la dose délivrée). Aucune forme galénique LP (libération prolongée) n'existe pour cette molécule.",
+        descEn: "Standard immediate release formulation (100% active dose delivered). No extended-release (ER/XR) matrix exists for this substance.",
         isExtended: false,
         waves: [
           { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
@@ -1642,13 +1676,13 @@
         'Oxycodone': [
           {
             id: 'IR',
-            shortFr: 'LI (OxyNorm 100%)',
-            shortEn: 'IR (OxyNorm 100%)',
-            badgeFr: 'LI (OxyNorm)',
-            badgeEn: 'IR (OxyNorm)',
+            shortFr: 'OxyNorm / OxyNormOro (LI)',
+            shortEn: 'OxyNorm / OxyNormOro (IR)',
+            badgeFr: 'OxyNorm LI',
+            badgeEn: 'OxyNorm IR',
             titleFr: "OxyNorm / OxyNormOro (LI — 100% immédiat, ~4-6h)",
             titleEn: "OxyNorm / OxyNormOro (IR — 100% immediate, ~4-6h)",
-            descFr: "100% de la dose libéré immédiatement : montée rapide (~25-35 min), pic franc et élevé à ~1h15, durée totale 4 à 6h.",
+            descFr: "Gélule ou solution buvable à libération immédiate : 100% de la dose libérée en 20-30 min, pic franc et élevé à ~1h15, durée totale 4 à 6h.",
             descEn: "100% of the dose released immediately: fast onset (~25-35 min), high sharp peak at ~1h15, total duration 4-6h.",
             isExtended: false,
             waves: [
@@ -1657,14 +1691,14 @@
           },
           {
             id: 'OXYCONTIN_LP_12H',
-            shortFr: 'OxyContin LP 12h (30% LI + 70% LP)',
-            shortEn: 'OxyContin ER 12h (30% IR + 70% ER)',
-            badgeFr: 'OxyContin LP 12h (30/70)',
-            badgeEn: 'OxyContin ER 12h (30/70)',
-            titleFr: "OxyContin LP 12h (AcroContin Biphasique : 30% immédiat + 70% sur 12h)",
-            titleEn: "OxyContin ER 12h (Biphasic AcroContin: 30% immediate + 70% over 12h)",
-            descFr: "30% de la dose est libéré immédiatement (montée rapide et pic d'effet initial haut dès ~1h15-1h30) suivi des 70% restants délivrés en plateau prolongé jusqu'à 12h.",
-            descEn: "30% of the dose is released immediately (fast onset and high initial peak at ~1h15-1h30) followed by the remaining 70% over 12 hours.",
+            shortFr: 'OxyContin LP 12h',
+            shortEn: 'OxyContin ER 12h',
+            badgeFr: 'OxyContin LP 12h',
+            badgeEn: 'OxyContin ER 12h',
+            titleFr: "OxyContin LP 12h (AcroContin Biphasique)",
+            titleEn: "OxyContin ER 12h (Biphasic AcroContin)",
+            descFr: "Matrice AcroContin biphasique : 30% libéré immédiatement en surface avec pic initial marqué à ~1h15-1h30, puis 70% libéré en plateau continu jusqu'à 12 heures.",
+            descEn: "Biphasic AcroContin matrix: 30% immediate surface release with marked initial peak at ~1h15-1h30, followed by 70% sustained plateau over 12 hours.",
             isExtended: true,
             waves: [
               { delayMin: 0, weight: 0.50, onsetScale: 0.9, riseScale: 0.85, plateauMin: 0, fallScale: 0.85 },
@@ -1673,14 +1707,14 @@
           },
           {
             id: 'OXY_GENERIC_LP_12H',
-            shortFr: 'Oxycodone LP Générique 12h (Matrice lente)',
-            shortEn: 'Generic Oxycodone ER 12h (Slow matrix)',
-            badgeFr: 'Oxycodone LP Générique 12h',
-            badgeEn: 'Generic Oxycodone ER 12h',
-            titleFr: "Oxycodone LP Générique 12h (Matrice continue lente sans dose immédiate)",
-            titleEn: "Generic Oxycodone ER 12h (Slow continuous matrix without immediate bolus)",
-            descFr: "Libération purement matricielle sans couche immédiate : montée beaucoup plus lente (3 à 4h pour atteindre le plateau), sans pic initial, avec un dôme plus bas étalé sur 12 heures.",
-            descEn: "Pure matrix release without an immediate coat: much slower climb (3 to 4h to reach plateau), no initial spike, lower sustained dome over 12 hours.",
+            shortFr: 'Oxycodone LP 12h (Générique)',
+            shortEn: 'Generic Oxycodone ER 12h',
+            badgeFr: 'Oxycodone LP 12h',
+            badgeEn: 'Oxycodone ER 12h',
+            titleFr: "Oxycodone LP 12h Générique (Matrice continue)",
+            titleEn: "Generic Oxycodone ER 12h (Continuous matrix)",
+            descFr: "Matrice hydrophile continue sans enrobage immédiat : montée progressive sur 3 à 4 heures sans pic initial brutal, puis plateau antalgique régulier étalé sur 12 heures.",
+            descEn: "Pure continuous matrix without immediate coat: gradual climb over 3-4 hours without an initial spike, followed by a steady 12-hour plateau.",
             isExtended: true,
             waves: [
               { delayMin: 0, weight: 0.52, onsetScale: 1.8, riseScale: 2.8, plateauMin: 240, fallScale: 1.5 }
@@ -1688,14 +1722,14 @@
           },
           {
             id: 'OXY_LP_24H',
-            shortFr: 'Oxycodone LP 24h (1 prise/j)',
-            shortEn: 'Oxycodone ER 24h (Once daily)',
+            shortFr: 'Oxycodone LP 24h (Targinact)',
+            shortEn: 'Oxycodone ER 24h (Targinact)',
             badgeFr: 'Oxycodone LP 24h',
             badgeEn: 'Oxycodone ER 24h',
-            titleFr: "Oxycodone LP 24h (Libération matricielle ultra-lente sur 24 heures)",
-            titleEn: "Oxycodone ER 24h (24-hour ultra-slow extended release)",
-            descFr: "Version LP 24h : montée très progressive sur 4 à 5h puis plateau continu bas sur 24 heures.",
-            descEn: "24h ER version: very gradual rise over 4-5h followed by a low continuous plateau over 24 hours.",
+            titleFr: "Oxycodone LP 24h / Targinact (Libération continue 24 heures)",
+            titleEn: "Oxycodone ER 24h / Targinact (Continuous 24-hour release)",
+            descFr: "Formulation à libération continue sur 24 heures (prise unique par jour) : montée très progressive sur 4 à 5h puis plateau bas prolongé.",
+            descEn: "24-hour continuous release formulation (once daily): very gradual climb over 4-5h followed by an extended 24-hour plateau.",
             isExtended: true,
             waves: [
               { delayMin: 0, weight: 0.38, onsetScale: 2.2, riseScale: 3.5, plateauMin: 720, fallScale: 2.2 }
@@ -1705,14 +1739,14 @@
         'Methylphenidate': [
           {
             id: 'IR',
-            shortFr: 'Ritaline LI (100% immédiat)',
-            shortEn: 'Ritalin IR (100% immediate)',
+            shortFr: 'Ritaline LI 10 mg',
+            shortEn: 'Ritalin IR 10 mg',
             badgeFr: 'Ritaline LI',
             badgeEn: 'Ritalin IR',
-            titleFr: "Ritaline LI 10 mg (100% immédiat — durée 3 à 4h)",
-            titleEn: "Ritalin IR 10 mg (100% immediate — 3 to 4h duration)",
-            descFr: "100% de la dose libéré immédiatement : pic franc et haut à +1h-1h15, descente rapide en 3 à 4h.",
-            descEn: "100% of the dose released immediately: sharp high peak at +1-1.25h, rapid offset within 3-4h.",
+            titleFr: "Ritaline LI 10 mg (Comprimé sécable — durée 3 à 4h)",
+            titleEn: "Ritalin IR 10 mg (Scored tablet — 3 to 4h duration)",
+            descFr: "100% de la dose libérée immédiatement : pic franc et haut à +1h-1h15, descente rapide en 3 à 4h avec effet rebond possible.",
+            descEn: "100% of dose released immediately: sharp high peak at +1-1.25h, rapid offset within 3-4h with potential rebound.",
             isExtended: false,
             waves: [
               { delayMin: 0, weight: 1.0, onsetScale: 0.9, riseScale: 0.85, plateauMin: 0, fallScale: 0.85 }
@@ -1720,14 +1754,14 @@
           },
           {
             id: 'RITALINE_LP_50_50',
-            shortFr: 'Ritaline LP / Medikinet (50% + 50% à +4h)',
-            shortEn: 'Ritalin LA / Medikinet (50% + 50% at +4h)',
-            badgeFr: 'Ritaline LP (50/50 +4h)',
-            badgeEn: 'Ritalin LA (50/50 +4h)',
-            titleFr: "Ritaline LP / Medikinet LM 8h (Bimodale : 50% immédiat + 50% à +4h)",
-            titleEn: "Ritalin LA / Medikinet MR 8h (Bimodal: 50% immediate + 50% at +4h)",
-            descFr: "50% de la dose est libéré immédiatement (1er pic à +1h15) et l'autre moitié (50%) est libérée 4h plus tard (2nd pic franc vers +5h15, durée ~8h).",
-            descEn: "50% of the dose is released immediately (1st peak at +1.25h) and the other half (50%) is released 4h later (2nd distinct peak at +5.25h, ~8h duration).",
+            shortFr: 'Ritaline LP 8h / Medikinet',
+            shortEn: 'Ritalin LA 8h / Medikinet',
+            badgeFr: 'Ritaline LP 8h',
+            badgeEn: 'Ritalin LA 8h',
+            titleFr: "Ritaline LP 8h / Medikinet LM (Microgranules bimodales)",
+            titleEn: "Ritalin LA / Medikinet MR 8h (Bimodal pellets)",
+            descFr: "Microgranules : 50% libéré immédiatement (1er pic à 1h15) et 50% libéré 4h plus tard par microgranules entériques (2nd pic à +5h15, durée 8h).",
+            descEn: "Capsule of pellets: 50% released immediately (1st peak at +1.25h) and 50% released 4 hours later via enteric coating (2nd peak at +5.25h, ~8h duration).",
             isExtended: true,
             waves: [
               { delayMin: 0, weight: 0.64, onsetScale: 0.9, riseScale: 0.8, plateauMin: 0, fallScale: 0.75 },
@@ -1736,14 +1770,14 @@
           },
           {
             id: 'QUASYM_LP_30_70',
-            shortFr: 'Quasym LP 8h (30% LI + 70% LP)',
-            shortEn: 'Equasym XL 8h (30% IR + 70% ER)',
-            badgeFr: 'Quasym LP (30/70)',
-            badgeEn: 'Equasym XL (30/70)',
-            titleFr: "Quasym LP 8h (30% immédiat + 70% libération prolongée)",
-            titleEn: "Equasym XL 8h (30% immediate + 70% extended release)",
-            descFr: "30% de la dose est libéré immédiatement (montée matinale modérée) suivi de 70% libéré progressivement avec un sommet principal plus soutenu vers +3h30-4h30.",
-            descEn: "30% of the dose is released immediately followed by 70% gradually released peaking around +3.5-4.5h.",
+            shortFr: 'Quasym LP 8h',
+            shortEn: 'Equasym XL 8h',
+            badgeFr: 'Quasym LP 8h',
+            badgeEn: 'Equasym XL 8h',
+            titleFr: "Quasym LP 8h (Microgranules asymétriques)",
+            titleEn: "Equasym XL 8h (Asymmetric pellets)",
+            descFr: "Profil asymétrique adapté à la journée scolaire : 30% libéré le matin pour le début de journée et 70% libéré progressivement culminant l'après-midi vers +3h30-4h30.",
+            descEn: "30% released immediately for morning coverage and 70% gradually released peaking at +3.5-4.5h.",
             isExtended: true,
             waves: [
               { delayMin: 0, weight: 0.36, onsetScale: 0.9, riseScale: 0.8, plateauMin: 0, fallScale: 0.8 },
@@ -1752,14 +1786,14 @@
           },
           {
             id: 'CONCERTA_LP_22_78',
-            shortFr: 'Concerta LP 12h (22% LI + 78% OROS)',
-            shortEn: 'Concerta ER 12h (22% IR + 78% OROS)',
-            badgeFr: 'Concerta LP (22/78)',
-            badgeEn: 'Concerta ER (22/78)',
-            titleFr: "Concerta LP OROS 12h (22% immédiat + 78% délivré équitablement sur 12h)",
-            titleEn: "Concerta ER OROS 12h (22% immediate + 78% evenly delivered over 12h)",
-            descFr: "22% de la dose totale est délivré immédiatement (enrobage externe) et les 78% restants sont délivrés de manière équitable par pompe osmotique OROS sur 10 à 12h.",
-            descEn: "22% of the total dose is delivered immediately (outer coat) and the remaining 78% is evenly delivered via OROS osmotic pump over 10-12h.",
+            shortFr: 'Concerta LP 12h (OROS)',
+            shortEn: 'Concerta ER 12h (OROS)',
+            badgeFr: 'Concerta LP 12h',
+            badgeEn: 'Concerta ER 12h',
+            titleFr: "Concerta LP OROS 12h (Pompe osmotique ALZA/OROS)",
+            titleEn: "Concerta ER OROS 12h (ALZA/OROS osmotic pump)",
+            descFr: "Système osmotique breveté : 22% délivré immédiatement par le sur-enrobage externe, puis 78% poussé régulièrement par la pompe osmotique OROS sur 10 à 12h.",
+            descEn: "Patented OROS push engine: 22% delivered immediately by outer coat, followed by 78% steadily delivered through laser-drilled orifice over 10-12 hours.",
             isExtended: true,
             waves: [
               { delayMin: 0, weight: 0.28, onsetScale: 0.9, riseScale: 0.8, plateauMin: 0, fallScale: 0.8 },
@@ -1767,64 +1801,17 @@
             ]
           }
         ],
-        'Tramadol': [
-          {
-            id: 'IR',
-            shortFr: 'LI (Topalgic / Contramal LI)',
-            shortEn: 'IR (Immediate 5-7h)',
-            badgeFr: 'LI (Immédiat)',
-            badgeEn: 'IR (Immediate)',
-            titleFr: "Tramadol LI 50 mg (100% immédiat — durée 5 à 7h)",
-            titleEn: "Tramadol IR 50 mg (100% immediate — 5 to 7h duration)",
-            descFr: "100% de la dose libéré immédiatement : montée en ~45-60 min, pic franc à 2h, durée 5 à 7 heures.",
-            descEn: "100% of the dose released immediately: onset in ~45-60 min, sharp peak at 2h, duration 5-7 hours.",
-            isExtended: false,
-            waves: [
-              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
-            ]
-          },
-          {
-            id: 'TRAMADOL_LP_12H',
-            shortFr: 'LP 12h (Topalgic / Contramal LP 12h)',
-            shortEn: 'ER 12h (Twice daily 12h)',
-            badgeFr: 'Tramadol LP 12h',
-            badgeEn: 'Tramadol ER 12h',
-            titleFr: "Tramadol LP 12h (Topalgic LP / Contramal LP — 2 prises/j sur 12h)",
-            titleEn: "Tramadol ER 12h (Twice-daily 12-hour extended release)",
-            descFr: "Version LP 12h : montée progressive sur 2h30-3h puis plateau soutenu sur 12 heures.",
-            descEn: "12h ER version: gradual climb over 2.5-3h followed by a sustained 12-hour plateau.",
-            isExtended: true,
-            waves: [
-              { delayMin: 0, weight: 0.56, onsetScale: 1.4, riseScale: 2.0, plateauMin: 240, fallScale: 1.4 }
-            ]
-          },
-          {
-            id: 'TRAMADOL_LP_24H',
-            shortFr: 'LP 24h (Monoalgic / Monocrixo LP 24h)',
-            shortEn: 'ER 24h (Once daily 24h)',
-            badgeFr: 'Tramadol LP 24h',
-            badgeEn: 'Tramadol ER 24h',
-            titleFr: "Tramadol LP 24h (Monoalgic LP / Monocrixo LP — 1 prise/j sur 24h)",
-            titleEn: "Tramadol ER 24h (Once-daily 24-hour extended release)",
-            descFr: "Version LP 24h : libération matricielle très lente (montée sur 4h) assurant un plateau continu sur 24 heures.",
-            descEn: "24h ER version: slow matrix release (4h climb) providing a continuous 24-hour plateau.",
-            isExtended: true,
-            waves: [
-              { delayMin: 0, weight: 0.40, onsetScale: 1.8, riseScale: 3.0, plateauMin: 680, fallScale: 2.0 }
-            ]
-          }
-        ],
         'Morphine': [
           {
             id: 'IR',
-            shortFr: 'LI (Actiskénan / Oramorph)',
-            shortEn: 'IR (Immediate 4-5h)',
-            badgeFr: 'LI (Actiskénan)',
-            badgeEn: 'IR (Immediate)',
-            titleFr: "Morphine LI (Actiskénan / Sévrédol / Oramorph — 100% immédiat, 4-5h)",
-            titleEn: "Morphine IR (100% immediate — 4-5h duration)",
-            descFr: "100% de la dose libéré immédiatement (montée en 30-45 min, pic à 1h15, durée 4-5h).",
-            descEn: "100% of the dose released immediately (onset 30-45 min, peak at 1h15, 4-5h duration).",
+            shortFr: 'Actiskénan / Sevredol (LI)',
+            shortEn: 'Actiskénan / Sevredol (IR)',
+            badgeFr: 'Actiskénan LI',
+            badgeEn: 'Morphine IR',
+            titleFr: "Morphine LI (Actiskénan / Sevredol / Oramorph — 100% immédiat, 4-5h)",
+            titleEn: "Morphine IR (Actiskénan / Sevredol / Oramorph — 100% immediate, 4-5h)",
+            descFr: "Gélule ou ampoule buvable à libération immédiate (montée en 30-45 min, pic à 1h15, durée 4-5h). Traitement de référence des accès douloureux.",
+            descEn: "100% of dose released immediately (onset 30-45 min, peak at 1h15, 4-5h duration). Standard for breakthrough pain.",
             isExtended: false,
             waves: [
               { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
@@ -1832,14 +1819,14 @@
           },
           {
             id: 'MORPHINE_LP_12H',
-            shortFr: 'Skénan LP / Moscontin 12h',
-            shortEn: 'MS Contin ER 12h',
+            shortFr: 'Skénan LP 12h / Moscontin',
+            shortEn: 'MS Contin / Skénan ER 12h',
             badgeFr: 'Skénan LP 12h',
-            badgeEn: 'ER 12h',
+            badgeEn: 'MS Contin 12h',
             titleFr: "Morphine LP 12h (Skénan LP / Moscontin — Microgranules LP sur 12h)",
-            titleEn: "Morphine ER 12h (Microgranules extended release over 12h)",
-            descFr: "Microgranules LP : montée progressive en 2h30-3h puis plateau antalgique stable sur 12 heures.",
-            descEn: "ER microgranules: gradual climb over 2.5-3h followed by a stable 12-hour plateau.",
+            titleEn: "Morphine ER 12h (MS Contin / Skénan LP — Extended microgranules over 12h)",
+            descFr: "Microgranules LP à enrobage polymérique : montée progressive en 2h30-3h puis plateau antalgique stable sur 12 heures (2 prises par jour).",
+            descEn: "Extended-release microgranules: gradual rise over 2.5-3h followed by a stable 12-hour plateau (twice daily).",
             isExtended: true,
             waves: [
               { delayMin: 0, weight: 0.55, onsetScale: 1.5, riseScale: 2.2, plateauMin: 260, fallScale: 1.4 }
@@ -1847,31 +1834,78 @@
           },
           {
             id: 'MORPHINE_LP_24H',
-            shortFr: 'Kapanol LP 24h',
-            shortEn: 'Kadian ER 24h',
+            shortFr: 'Kapanol LP 24h / Kadian',
+            shortEn: 'Kapanol / Kadian ER 24h',
             badgeFr: 'Kapanol LP 24h',
-            badgeEn: 'ER 24h',
-            titleFr: "Morphine LP 24h (Kapanol LP — Microgranules sur 24h)",
-            titleEn: "Morphine ER 24h (Kapanol / Kadian 24-hour release)",
-            descFr: "Libération prolongée continue très progressive sur 24 heures (1 prise par jour).",
-            descEn: "Continuous extended release over 24 hours (once daily).",
+            badgeEn: 'Kadian ER 24h',
+            titleFr: "Morphine LP 24h (Kapanol LP / Kadian — Microgranules 24 heures)",
+            titleEn: "Morphine ER 24h (Kapanol / Kadian — 24-hour pellets)",
+            descFr: "Microgranules polymériques libérant la morphine de façon continue sur 24 heures (1 prise unique par jour).",
+            descEn: "Continuous extended-release pellets providing uniform plasma levels over 24 hours (once daily).",
             isExtended: true,
             waves: [
               { delayMin: 0, weight: 0.40, onsetScale: 2.0, riseScale: 3.2, plateauMin: 720, fallScale: 2.0 }
             ]
           }
         ],
+        'Tramadol': [
+          {
+            id: 'IR',
+            shortFr: 'Topalgic LI / Contramal (LI)',
+            shortEn: 'Topalgic / Contramal IR',
+            badgeFr: 'Topalgic LI',
+            badgeEn: 'Tramadol IR',
+            titleFr: "Tramadol LI 50 mg (Topalgic / Contramal — durée 5-7h)",
+            titleEn: "Tramadol IR 50 mg (Topalgic / Contramal — 5-7h duration)",
+            descFr: "Gélule ou comprimé effervescent à libération immédiate : montée en 45-60 min, pic franc à 2h, durée 5 à 7 heures.",
+            descEn: "100% dose released immediately: onset 45-60 min, peak at 2h, duration 5-7h.",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'TRAMADOL_LP_12H',
+            shortFr: 'Topalgic LP 12h / Contramal LP',
+            shortEn: 'Topalgic LP / Contramal ER 12h',
+            badgeFr: 'Topalgic LP 12h',
+            badgeEn: 'Tramadol ER 12h',
+            titleFr: "Tramadol LP 12h (Topalgic LP / Contramal LP — 2 prises/j)",
+            titleEn: "Tramadol ER 12h (Topalgic LP / Contramal LP — twice daily)",
+            descFr: "Comprimé matriciel à libération prolongée sur 12 heures : montée progressive sur 2h30-3h puis plateau antalgique soutenu sur 12h.",
+            descEn: "Matrix extended release over 12 hours: gradual climb over 2.5-3h followed by a sustained 12-hour plateau.",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.56, onsetScale: 1.4, riseScale: 2.0, plateauMin: 240, fallScale: 1.4 }
+            ]
+          },
+          {
+            id: 'TRAMADOL_LP_24H',
+            shortFr: 'Monoalgic LP 24h / Monocrixo',
+            shortEn: 'Monoalgic / Monocrixo ER 24h',
+            badgeFr: 'Monoalgic LP 24h',
+            badgeEn: 'Tramadol ER 24h',
+            titleFr: "Tramadol LP 24h (Monoalgic LP / Monocrixo LP — 1 prise/j)",
+            titleEn: "Tramadol ER 24h (Monoalgic / Monocrixo — once daily)",
+            descFr: "Libération matricielle très lente étalée sur 24 heures assurant une analgésie continue en une prise matinale unique.",
+            descEn: "Slow 24-hour matrix release providing round-the-clock analgesia with once-daily morning intake.",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.40, onsetScale: 1.8, riseScale: 3.0, plateauMin: 680, fallScale: 2.0 }
+            ]
+          }
+        ],
         'Hydromorphone': [
           {
             id: 'IR',
-            shortFr: 'LI (Immédiate)',
-            shortEn: 'IR (Immediate)',
-            badgeFr: 'LI',
-            badgeEn: 'IR',
-            titleFr: "Hydromorphone LI (100% immédiat — 4 à 5h)",
+            shortFr: 'Hydromorphone LI',
+            shortEn: 'Hydromorphone IR',
+            badgeFr: 'Hydromorphone LI',
+            badgeEn: 'Hydromorphone IR',
+            titleFr: "Hydromorphone LI (100% immédiat — 4-5h)",
             titleEn: "Hydromorphone IR (100% immediate — 4-5h)",
-            descFr: "100% de la dose libéré immédiatement.",
-            descEn: "100% of the dose released immediately.",
+            descFr: "Action antalgique immédiate et puissante pour les accès douloureux paroxystiques.",
+            descEn: "Immediate-release potent analgesia for breakthrough pain.",
             isExtended: false,
             waves: [
               { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
@@ -1880,13 +1914,13 @@
           {
             id: 'SOPHIDONE_LP_12H',
             shortFr: 'Sophidone LP 12h',
-            shortEn: 'Palladone SR 12h',
+            shortEn: 'Sophidone / Palladone SR 12h',
             badgeFr: 'Sophidone LP 12h',
-            badgeEn: 'SR 12h',
-            titleFr: "Sophidone LP 12h (Microgranules LP sur 12h)",
-            titleEn: "Hydromorphone SR 12h (12-hour sustained release)",
-            descFr: "Libération prolongée sur 12 heures (montée progressive en 2h30-3h, 2 prises par jour).",
-            descEn: "12-hour sustained release (twice daily).",
+            badgeEn: 'Sophidone SR 12h',
+            titleFr: "Sophidone LP 12h (Microgranules à libération prolongée 12h)",
+            titleEn: "Sophidone LP 12h (12-hour sustained-release microgranules)",
+            descFr: "Microgranules enrobés libérant l'hydromorphone sur 12 heures (2 prises par jour).",
+            descEn: "Coated pellets delivering hydromorphone over 12 hours (twice daily).",
             isExtended: true,
             waves: [
               { delayMin: 0, weight: 0.55, onsetScale: 1.5, riseScale: 2.2, plateauMin: 260, fallScale: 1.4 }
@@ -1895,30 +1929,63 @@
           {
             id: 'JURNISTA_LP_24H',
             shortFr: 'Jurnista LP 24h (OROS)',
-            shortEn: 'Exalgo ER 24h (OROS)',
+            shortEn: 'Jurnista / Exalgo ER 24h (OROS)',
             badgeFr: 'Jurnista LP 24h',
-            badgeEn: 'ER 24h (OROS)',
-            titleFr: "Jurnista LP 24h (Système osmotique OROS sur 24h)",
-            titleEn: "Jurnista / Exalgo ER 24h (24-hour OROS osmotic release)",
-            descFr: "Système osmotique OROS délivrant l'hydromorphone de manière équitable sur 24 heures.",
-            descEn: "OROS osmotic push system delivering hydromorphone evenly over 24 hours.",
+            badgeEn: 'Jurnista ER 24h',
+            titleFr: "Jurnista LP 24h (Système osmotique OROS Push-Pull 24h)",
+            titleEn: "Jurnista LP 24h / Exalgo (OROS Push-Pull osmotic system 24h)",
+            descFr: "Pompe osmotique OROS délivrant l'hydromorphone de manière ultra-régulière sur 24 heures sans pic initial.",
+            descEn: "OROS osmotic push engine delivering hydromorphone evenly over 24 hours without initial peaks.",
             isExtended: true,
             waves: [
               { delayMin: 0, weight: 0.40, onsetScale: 2.0, riseScale: 3.2, plateauMin: 720, fallScale: 2.0 }
             ]
           }
         ],
+        'Amphetamine': [
+          {
+            id: 'IR',
+            shortFr: 'Dexedrine / Amphétamine (LI)',
+            shortEn: 'Dexedrine / Amphetamine IR',
+            badgeFr: 'Amphétamine LI',
+            badgeEn: 'Amphetamine IR',
+            titleFr: "Amphétamine LI / Dexedrine (100% immédiat — 4-6h)",
+            titleEn: "Amphetamine IR / Dexedrine (100% immediate — 4-6h)",
+            descFr: "100% de la dose libérée immédiatement en 30-45 min avec pic franc et net.",
+            descEn: "100% of dose released immediately in 30-45 min with sharp peak.",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 0.9, riseScale: 0.85, plateauMin: 0, fallScale: 0.85 }
+            ]
+          },
+          {
+            id: 'ADDERALL_XR',
+            shortFr: 'Adderall XR 12h',
+            shortEn: 'Adderall XR 12h',
+            badgeFr: 'Adderall XR 12h',
+            badgeEn: 'Adderall XR 12h',
+            titleFr: "Adderall XR 12h (Microbilles bimodales : 50% immédiat + 50% retardé à +4h)",
+            titleEn: "Adderall XR 12h (Bimodal beads: 50% immediate + 50% delayed at +4h)",
+            descFr: "Gélule contenant 50% de microbilles immédiates et 50% de microbilles entériques différées de 4h (double pic franc à +1h30 et +5h30).",
+            descEn: "Capsule containing 50% immediate-release beads and 50% delayed-release beads (dual peak at +1.5h and +5.5h).",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.62, onsetScale: 0.9, riseScale: 0.8, plateauMin: 0, fallScale: 0.75 },
+              { delayMin: 220, weight: 0.62, onsetScale: 0.8, riseScale: 0.85, plateauMin: 0, fallScale: 0.9 }
+            ]
+          }
+        ],
         'Ketoprofen': [
           {
             id: 'IR',
-            shortFr: 'LI (Profénid / Toprec LI)',
-            shortEn: 'IR (Immediate)',
-            badgeFr: 'LI',
-            badgeEn: 'IR',
-            titleFr: "Kétoprofène LI 50-100 mg (100% immédiat — 6h)",
-            titleEn: "Ketoprofen IR (100% immediate — 6h)",
-            descFr: "100% de la dose libéré immédiatement.",
-            descEn: "100% of the dose released immediately.",
+            shortFr: 'Prophénid LI / Toprec',
+            shortEn: 'Profenid IR / Toprec',
+            badgeFr: 'Prophénid LI',
+            badgeEn: 'Profenid IR',
+            titleFr: "Prophénid LI / Toprec (Kétoprofène immédiat — 4-6h)",
+            titleEn: "Profenid IR / Toprec (Immediate release ketoprofen — 4-6h)",
+            descFr: "Libération immédiate pour les crises inflammatoires et douloureuses aiguës.",
+            descEn: "Immediate release for acute inflammatory pain episodes.",
             isExtended: false,
             waves: [
               { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
@@ -1926,13 +1993,13 @@
           },
           {
             id: 'BIPROFENID_LP_12H',
-            shortFr: 'Bi-Profénid LP 12h (50% LI + 50% LP)',
-            shortEn: 'Bi-Profenid ER 12h (50/50)',
-            badgeFr: 'Bi-Profénid LP 12h',
+            shortFr: 'Bi-Prophénid LP 12h',
+            shortEn: 'Bi-Profenid ER 12h',
+            badgeFr: 'Bi-Prophénid LP 12h',
             badgeEn: 'Bi-Profenid ER 12h',
-            titleFr: "Bi-Profénid LP 150 mg (Bicouche : 50% immédiat + 50% prolongé sur 12h)",
-            titleEn: "Bi-Profenid ER 150 mg (Bilayer: 50% immediate + 50% extended over 12h)",
-            descFr: "Comprimé bicouche : la couche blanche libère 50% immédiatement (pic rapide) et la couche jaune libère 50% progressivement sur 12h.",
+            titleFr: "Bi-Prophénid LP 150 mg (Comprimé sécable bicouche)",
+            titleEn: "Bi-Profenid ER 150 mg (Bilayer tablet)",
+            descFr: "Comprimé bicouche breveté : couche blanche immédiate (50% de la dose pour soulagement rapide) et couche jaune matricielle (50% étalée sur 12h).",
             descEn: "Bilayer tablet: 50% released immediately (fast peak) and 50% released gradually over 12h.",
             isExtended: true,
             waves: [
@@ -1942,13 +2009,13 @@
           },
           {
             id: 'PROFENID_LP_24H',
-            shortFr: 'Profénid LP 24h (200 mg)',
-            shortEn: 'Profenid ER 24h (200 mg)',
-            badgeFr: 'Profénid LP 24h',
+            shortFr: 'Prophénid LP 24h',
+            shortEn: 'Profenid ER 24h',
+            badgeFr: 'Prophénid LP 24h',
             badgeEn: 'Profenid ER 24h',
-            titleFr: "Profénid LP 200 mg (Microgranules à libération prolongée 24h)",
-            titleEn: "Ketoprofen ER 200 mg (24-hour extended release pellets)",
-            descFr: "Gélule à microgranules gastro-résistants et à libération prolongée lente sur 24 heures.",
+            titleFr: "Prophénid LP 200 mg (Microgranules LP 24 heures)",
+            titleEn: "Profenid ER 200 mg (24-hour pellets)",
+            descFr: "Microgranules polymériques à libération prolongée lente sur 24 heures (1 prise unique quotidienne).",
             descEn: "Extended-release microgranules providing slow 24-hour coverage.",
             isExtended: true,
             waves: [
@@ -1956,17 +2023,64 @@
             ]
           }
         ],
+        'Diclofenac': [
+          {
+            id: 'IR',
+            shortFr: 'Voltarène LI 50 mg',
+            shortEn: 'Voltaren IR 50 mg',
+            badgeFr: 'Voltarène LI',
+            badgeEn: 'Voltaren IR',
+            titleFr: "Voltarène LI 50 mg (Comprimé gastro-résistant immédiat)",
+            titleEn: "Voltaren IR 50 mg (Immediate release tablet)",
+            descFr: "Absorption digestive rapide avec pic à 1h30-2h (durée 6 heures).",
+            descEn: "Fast absorption with peak at 1.5-2h (duration 6 hours).",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'VOLTARENE_LP_75',
+            shortFr: 'Voltarène LP 75 mg',
+            shortEn: 'Voltaren Retard 75 mg',
+            badgeFr: 'Voltarène LP 75',
+            badgeEn: 'Voltaren LP 75',
+            titleFr: "Voltarène LP 75 mg (Comprimé matriciel 12h)",
+            titleEn: "Voltaren Retard 75 mg (12-hour sustained release)",
+            descFr: "Matrice hydrophile libérant le diclofénac de manière continue sur 12 heures (2 prises par jour).",
+            descEn: "Hydrophilic matrix releasing diclofenac steadily over 12 hours (twice daily).",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.55, onsetScale: 1.5, riseScale: 2.2, plateauMin: 260, fallScale: 1.4 }
+            ]
+          },
+          {
+            id: 'VOLTARENE_LP_100',
+            shortFr: 'Voltarène LP 100 mg',
+            shortEn: 'Voltaren Retard 100 mg',
+            badgeFr: 'Voltarène LP 100',
+            badgeEn: 'Voltaren LP 100',
+            titleFr: "Voltarène LP 100 mg (Comprimé matriciel 24 heures)",
+            titleEn: "Voltaren Retard 100 mg (24-hour extended release)",
+            descFr: "Dose journalière complète délivrée sur 24 heures (1 prise unique le soir au repas).",
+            descEn: "Full daily dose delivered over 24 hours (once daily evening intake).",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.40, onsetScale: 2.0, riseScale: 3.2, plateauMin: 720, fallScale: 2.0 }
+            ]
+          }
+        ],
         'Alprazolam': [
           {
             id: 'IR',
-            shortFr: 'LI (Xanax LI)',
-            shortEn: 'IR (Xanax IR)',
-            badgeFr: 'LI',
-            badgeEn: 'IR',
-            titleFr: "Xanax LI (100% immédiat — 5 à 7h)",
-            titleEn: "Xanax IR (100% immediate — 5-7h)",
-            descFr: "100% de la dose libéré immédiatement (montée en 20-40 min, pic franc).",
-            descEn: "100% of the dose released immediately (onset in 20-40 min, sharp peak).",
+            shortFr: 'Xanax LI',
+            shortEn: 'Xanax IR',
+            badgeFr: 'Xanax LI',
+            badgeEn: 'Xanax IR',
+            titleFr: "Xanax LI (Comprimé sécable — 100% immédiat, 5-7h)",
+            titleEn: "Xanax IR (Scored tablet — 100% immediate, 5-7h)",
+            descFr: "100% de la dose libérée immédiatement (montée en 20-40 min, anxiolyse franche, pic net).",
+            descEn: "100% dose released immediately (onset in 20-40 min, sharp peak).",
             isExtended: false,
             waves: [
               { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
@@ -1974,116 +2088,455 @@
           },
           {
             id: 'XANAX_XR_12H',
-            shortFr: 'Xanax XR / LP 12h',
+            shortFr: 'Xanax XR 12h',
             shortEn: 'Xanax XR 12h',
             badgeFr: 'Xanax XR 12h',
             badgeEn: 'Xanax XR 12h',
-            titleFr: "Alprazolam LP / Xanax XR (Matrice à libération prolongée 12h)",
-            titleEn: "Alprazolam XR (12-hour extended-release matrix)",
-            descFr: "Montée progressive sur 3h et maintien d'une concentration stable sur 11 à 12 heures sans pic abrupt.",
+            titleFr: "Xanax XR 12h (Matrice hydrophile)",
+            titleEn: "Xanax XR 12h (Extended-release matrix)",
+            descFr: "Montée progressive sur 3h et maintien d'une concentration anxiolytique stable sur 11 à 12 heures sans pic abrupt.",
             descEn: "Gradual 3h climb maintaining a steady plasma concentration over 11-12 hours without a sharp peak.",
             isExtended: true,
             waves: [
               { delayMin: 0, weight: 0.54, onsetScale: 1.6, riseScale: 2.4, plateauMin: 260, fallScale: 1.4 }
             ]
           }
+        ],
+        'Zolpidem': [
+          {
+            id: 'IR',
+            shortFr: 'Stilnox LI 10 mg',
+            shortEn: 'Ambien / Stilnox IR 10 mg',
+            badgeFr: 'Stilnox LI',
+            badgeEn: 'Ambien IR',
+            titleFr: "Stilnox LI 10 mg (100% immédiat — inducteur de sommeil)",
+            titleEn: "Stilnox / Ambien IR 10 mg (100% immediate sleep inducer)",
+            descFr: "Pic très rapide en 20-30 min, durée courte 3-4h pour l'endormissement sans somnolence résiduelle le matin.",
+            descEn: "Fast peak within 20-30 min, 3-4h duration for sleep induction without hangover.",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'STILNOX_CR',
+            shortFr: 'Stilnox CR',
+            shortEn: 'Ambien CR',
+            badgeFr: 'Stilnox CR',
+            badgeEn: 'Ambien CR',
+            titleFr: "Stilnox CR / Ambien CR (Comprimé bicouche)",
+            titleEn: "Ambien CR / Stilnox CR (Bilayer tablet)",
+            descFr: "Comprimé bicouche breveté : 60% immédiat pour l'endormissement rapide et 40% libéré sur 6 heures pour prévenir les réveils nocturnes.",
+            descEn: "Patented bilayer tablet: 60% released immediately for rapid sleep onset and 40% released over 6 hours to prevent nocturnal awakenings.",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.65, onsetScale: 0.85, riseScale: 0.8, plateauMin: 0, fallScale: 0.8 },
+              { delayMin: 45, weight: 0.40, onsetScale: 1.2, riseScale: 1.6, plateauMin: 180, fallScale: 1.2 }
+            ]
+          }
+        ],
+        'Melatonin': [
+          {
+            id: 'IR',
+            shortFr: 'Mélatonine LI',
+            shortEn: 'Melatonin IR',
+            badgeFr: 'Mélatonine LI',
+            badgeEn: 'Melatonin IR',
+            titleFr: "Mélatonine LI (Compléments / gouttes — immédiat)",
+            titleEn: "Melatonin IR (Immediate release supplements)",
+            descFr: "Pic rapide en 20-40 min, élimination rapide en 2-3h (adapté au retard de phase ou jet-lag).",
+            descEn: "Fast peak within 20-40 min, clearance in 2-3h (suitable for phase delay or jet-lag).",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'CIRCADIN_LP_8H',
+            shortFr: 'Circadin LP 8h',
+            shortEn: 'Circadin PR 8h',
+            badgeFr: 'Circadin LP 8h',
+            badgeEn: 'Circadin PR 8h',
+            titleFr: "Circadin LP 2 mg / Slenyto (Matrice LP 8h)",
+            titleEn: "Circadin PR 2 mg / Slenyto (8h matrix)",
+            descFr: "Matrice polymérique hydrophile mimant fidèlement le profil de sécrétion physiologique nocturne de la mélatonine pendant 8 heures.",
+            descEn: "Hydrophilic matrix closely mimicking the physiological nocturnal melatonin secretion profile over 8 hours.",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.50, onsetScale: 1.4, riseScale: 2.0, plateauMin: 280, fallScale: 1.4 }
+            ]
+          }
+        ],
+        'Venlafaxine': [
+          {
+            id: 'IR',
+            shortFr: 'Effexor LI',
+            shortEn: 'Effexor IR',
+            badgeFr: 'Effexor LI',
+            badgeEn: 'Effexor IR',
+            titleFr: "Effexor LI (Comprimé conventionnel — 2 à 3 prises/j)",
+            titleEn: "Effexor IR (Standard tablet — 2 to 3 doses/day)",
+            descFr: "Absorption rapide avec demi-vie courte nécessitant des prises fractionnées.",
+            descEn: "Fast absorption with short half-life requiring multiple daily doses.",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'EFFEXOR_LP_24H',
+            shortFr: 'Effexor LP 24h',
+            shortEn: 'Effexor XR 24h',
+            badgeFr: 'Effexor LP 24h',
+            badgeEn: 'Effexor XR 24h',
+            titleFr: "Effexor LP 24h / Venlafaxine LP",
+            titleEn: "Effexor XR 24h / Venlafaxine ER",
+            descFr: "Microgranules sphériques à membrane polymérique libérant la venlafaxine de façon stable sur 24 heures (1 prise unique le matin).",
+            descEn: "Polymer-coated spheroids providing steady 24-hour release with once-daily morning dosing.",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.42, onsetScale: 1.8, riseScale: 2.8, plateauMin: 660, fallScale: 1.8 }
+            ]
+          }
+        ],
+        'Bupropion': [
+          {
+            id: 'IR',
+            shortFr: 'Wellbutrin IR',
+            shortEn: 'Wellbutrin IR',
+            badgeFr: 'Wellbutrin IR',
+            badgeEn: 'Wellbutrin IR',
+            titleFr: "Wellbutrin IR (Libération immédiate — 3 prises/jour)",
+            titleEn: "Wellbutrin IR (Immediate release — 3 doses/day)",
+            descFr: "Forme immédiate nécessitant un fractionnement strict pour limiter le risque convulsif.",
+            descEn: "Immediate-release requiring strict division.",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'ZYBAN_LP_12H',
+            shortFr: 'Zyban LP 12h',
+            shortEn: 'Wellbutrin SR 12h',
+            badgeFr: 'Zyban LP 12h',
+            badgeEn: 'Wellbutrin SR 12h',
+            titleFr: "Zyban LP 12h / Wellbutrin SR (Matrice 12h)",
+            titleEn: "Wellbutrin SR / Zyban (12-hour sustained matrix)",
+            descFr: "Matrice hydrophile étalant la diffusion sur 12 heures (2 prises quotidiennes espacées d'au moins 8h).",
+            descEn: "Sustained-release matrix delivering bupropion over 12 hours (twice daily, at least 8h apart).",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.55, onsetScale: 1.5, riseScale: 2.2, plateauMin: 260, fallScale: 1.4 }
+            ]
+          },
+          {
+            id: 'WELLBUTRIN_XL_24H',
+            shortFr: 'Wellbutrin XL 24h',
+            shortEn: 'Wellbutrin XL 24h',
+            badgeFr: 'Wellbutrin XL 24h',
+            badgeEn: 'Wellbutrin XL 24h',
+            titleFr: "Wellbutrin XL 24h (Comprimé à libération continue 24h)",
+            titleEn: "Wellbutrin XL 24h (24-hour continuous tablet)",
+            descFr: "Membrane semi-perméable assurant une diffusion continue sur 24 heures en monoprise matinale.",
+            descEn: "Semipermeable membrane system providing once-daily morning 24-hour continuous delivery.",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.40, onsetScale: 2.0, riseScale: 3.2, plateauMin: 720, fallScale: 2.0 }
+            ]
+          }
+        ],
+        'Quetiapine': [
+          {
+            id: 'IR',
+            shortFr: 'Xeroquel LI / Séroquel',
+            shortEn: 'Seroquel IR',
+            badgeFr: 'Xeroquel LI',
+            badgeEn: 'Seroquel IR',
+            titleFr: "Xeroquel LI / Séroquel (Comprimé conventionnel — 2 prises/j)",
+            titleEn: "Seroquel IR (Immediate release tablet — twice daily)",
+            descFr: "Pic sédatif rapide en 1h à 1h30, durée courte nécessitant 2 prises par jour.",
+            descEn: "Rapid sedative peak in 1-1.5h, requiring twice-daily administration.",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'XEROQUEL_LP_24H',
+            shortFr: 'Xeroquel LP 24h',
+            shortEn: 'Seroquel XR 24h',
+            badgeFr: 'Xeroquel LP 24h',
+            badgeEn: 'Seroquel XR 24h',
+            titleFr: "Xeroquel LP 24h / Seroquel XR (Matrice LP)",
+            titleEn: "Seroquel XR 24h (Extended-release matrix)",
+            descFr: "Comprimé matriciel hydrophile étalant la diffusion sur 24 heures sans pic de somnolence diurne brutal (1 prise le soir au coucher).",
+            descEn: "Hydrophilic matrix releasing quetiapine steadily over 24 hours without daytime somnolence peaks (once daily at bedtime).",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.42, onsetScale: 1.8, riseScale: 2.8, plateauMin: 660, fallScale: 1.8 }
+            ]
+          }
+        ],
+        'Lithium': [
+          {
+            id: 'IR',
+            shortFr: 'Téralithe 250 mg LI',
+            shortEn: 'Lithium IR 250 mg',
+            badgeFr: 'Téralithe 250 LI',
+            badgeEn: 'Lithium IR 250',
+            titleFr: "Téralithe 250 mg (Carbonate de lithium à libération immédiate)",
+            titleEn: "Lithium carbonate IR 250 mg (Immediate release)",
+            descFr: "Absorption rapide avec pic plasmatique en 1-2h, nécessite 2 à 3 prises quotidiennes pour réguler la lithémie.",
+            descEn: "Fast absorption with 1-2h peak, requiring 2-3 daily doses to regulate serum lithium.",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'TERALITHE_LP_400',
+            shortFr: 'Téralithe LP 400',
+            shortEn: 'Lithium LP 400',
+            badgeFr: 'Téralithe LP 400',
+            badgeEn: 'Lithium LP 400',
+            titleFr: "Téralithe LP 400 mg (Comprimé sécable matriciel)",
+            titleEn: "Lithium LP 400 mg (Scored sustained matrix)",
+            descFr: "Matrice inerte libérant le lithium régulièrement sur 12 à 24 heures, stabilisant la lithémie en 1 ou 2 prises quotidiennes.",
+            descEn: "Inert matrix delivering lithium steadily over 12-24 hours, stabilizing lithium levels in 1-2 daily doses.",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.50, onsetScale: 1.6, riseScale: 2.4, plateauMin: 320, fallScale: 1.5 }
+            ]
+          }
+        ],
+        'Valproate': [
+          {
+            id: 'IR',
+            shortFr: 'Dépakine LI',
+            shortEn: 'Depakine IR',
+            badgeFr: 'Dépakine LI',
+            badgeEn: 'Depakine IR',
+            titleFr: "Dépakine LI (Valproate de sodium — comprimé gastro-résistant)",
+            titleEn: "Depakine IR (Sodium valproate gastro-resistant tablet)",
+            descFr: "Pic plasmatique en 2 à 3h, fluctuations journalières nécessitant 2 à 3 prises.",
+            descEn: "Plasma peak in 2-3h, requiring 2-3 divided doses daily.",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'DEPAKINE_CHRONO_12H',
+            shortFr: 'Dépakine Chrono LP 12h',
+            shortEn: 'Depakine Chrono ER 12h',
+            badgeFr: 'Dépakine Chrono LP',
+            badgeEn: 'Depakine Chrono ER',
+            titleFr: "Dépakine Chrono LP 12h / Dépakote LP",
+            titleEn: "Depakine Chrono ER 12h / Depakote ER",
+            descFr: "Comprimé matriciel sécable à dissolution lente assurant une concentration plasmatique stable sur 12 à 24 heures.",
+            descEn: "Scored slow-dissolution matrix tablet providing stable plasma concentrations over 12-24 hours.",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.52, onsetScale: 1.5, riseScale: 2.2, plateauMin: 280, fallScale: 1.4 }
+            ]
+          }
+        ],
+        'Carbamazepine': [
+          {
+            id: 'IR',
+            shortFr: 'Tégrétol LI 200 mg',
+            shortEn: 'Tegretol IR 200 mg',
+            badgeFr: 'Tégrétol LI',
+            badgeEn: 'Tegretol IR',
+            titleFr: "Tégrétol LI (Comprimé conventionnel — 3 prises/j)",
+            titleEn: "Tegretol IR (Standard tablet — 3 doses/day)",
+            descFr: "Absorption avec pics pouvant entraîner vertiges et diplopie.",
+            descEn: "Absorption with peaks that can cause dizziness and diplopia.",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'TEGRETOL_LP_12H',
+            shortFr: 'Tégrétol LP 12h',
+            shortEn: 'Tegretol CR 12h',
+            badgeFr: 'Tégrétol LP 12h',
+            badgeEn: 'Tegretol CR 12h',
+            titleFr: "Tégrétol LP 12h (Comprimé sécable LP)",
+            titleEn: "Tegretol CR / XR 12h (Scored controlled-release)",
+            descFr: "Matrice inerte réduisant les pics plasmatiques et maintenant des taux stables (2 prises par jour).",
+            descEn: "Inert matrix smoothing plasma fluctuations and maintaining steady levels (twice daily).",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.54, onsetScale: 1.5, riseScale: 2.2, plateauMin: 280, fallScale: 1.4 }
+            ]
+          }
+        ],
+        'Propranolol': [
+          {
+            id: 'IR',
+            shortFr: 'Avlocardyl LI 40 mg',
+            shortEn: 'Inderal / Avlocardyl IR 40 mg',
+            badgeFr: 'Avlocardyl LI',
+            badgeEn: 'Inderal IR',
+            titleFr: "Avlocardyl LI 40 mg (Comprimé sécable à libération immédiate)",
+            titleEn: "Inderal / Avlocardyl IR 40 mg (Immediate release)",
+            descFr: "Pic bêta-bloquant en 1 à 2h, durée de 4 à 6h (2 à 3 prises/j).",
+            descEn: "Beta-blockade peak in 1-2h, duration 4-6h (2-3 daily doses).",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'AVLOCARDYL_LP_160',
+            shortFr: 'Avlocardyl LP 160',
+            shortEn: 'Inderal LA 160',
+            badgeFr: 'Avlocardyl LP 160',
+            badgeEn: 'Inderal LA 160',
+            titleFr: "Avlocardyl LP 160 mg (Microgranules 24h)",
+            titleEn: "Inderal LA 160 mg (24-hour pellets)",
+            descFr: "Microgranules à diffusion continue assurant une couverture hémodynamique stable sur 24 heures (1 prise le matin).",
+            descEn: "Continuous-diffusion microgranules providing stable 24-hour hemodynamic blockade (once daily morning).",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.40, onsetScale: 2.0, riseScale: 3.2, plateauMin: 720, fallScale: 2.0 }
+            ]
+          }
+        ],
+        'Pregabalin': [
+          {
+            id: 'IR',
+            shortFr: 'Lyrica LI',
+            shortEn: 'Lyrica IR',
+            badgeFr: 'Lyrica LI',
+            badgeEn: 'Lyrica IR',
+            titleFr: "Lyrica LI (Gélule standard — 2 à 3 prises par jour)",
+            titleEn: "Lyrica IR (Standard capsule — 2 to 3 doses daily)",
+            descFr: "Absorption rapide avec pic plasmatique en 1 heure (biodisponibilité >90%).",
+            descEn: "Fast absorption with 1-hour peak (bioavailability >90%).",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'LYRICA_CR_24H',
+            shortFr: 'Lyrica CR 24h',
+            shortEn: 'Lyrica CR 24h',
+            badgeFr: 'Lyrica CR 24h',
+            badgeEn: 'Lyrica CR 24h',
+            titleFr: "Lyrica CR 24h (Matrice gastro-rétentive 24h)",
+            titleEn: "Lyrica CR 24h (Gastroretentive matrix)",
+            descFr: "Formulation gastro-rétentive qui gonfle dans l'estomac et libère la prégabaline lentement sur 24 heures (1 prise unique le soir après le dîner).",
+            descEn: "Gastroretentive swelling matrix delivering pregabalin steadily over 24 hours (once daily after evening meal).",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.42, onsetScale: 1.8, riseScale: 2.8, plateauMin: 660, fallScale: 1.8 }
+            ]
+          }
+        ],
+        'Dihydrocodeine': [
+          {
+            id: 'DICODIN_LP_12H',
+            shortFr: 'Dicodin LP 12h',
+            shortEn: 'Dicodin LP 12h',
+            badgeFr: 'Dicodin LP 12h',
+            badgeEn: 'Dicodin LP 12h',
+            titleFr: "Dicodin LP 60 mg (Comprimé enrobé LP 12h)",
+            titleEn: "Dicodin LP 60 mg / DHC Continus (12h sustained)",
+            descFr: "Matrice enrobée libérant la dihydrocodéine de manière continue sur 12 heures (2 prises quotidiennes).",
+            descEn: "Coated matrix delivering dihydrocodeine steadily over 12 hours (twice daily).",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.55, onsetScale: 1.5, riseScale: 2.2, plateauMin: 260, fallScale: 1.4 }
+            ]
+          }
+        ],
+        'Lisdexamfetamine': [
+          {
+            id: 'VYVANSE_PRODRUG',
+            shortFr: 'Vyvanse / Elvanse',
+            shortEn: 'Vyvanse / Elvanse',
+            badgeFr: 'Vyvanse 12-14h',
+            badgeEn: 'Vyvanse 12-14h',
+            titleFr: "Vyvanse / Elvanse (Prodrogue enzymatique érythrocytaire)",
+            titleEn: "Vyvanse / Elvanse (Enzymatic erythrocyte prodrug)",
+            descFr: "Prodrogue inactive de la d-amphétamine liée à la L-lysine : activée progressivement par les globules rouges, délivrant l'amphétamine de façon lisse et continue sur 12 à 14 heures sans pic abrupt.",
+            descEn: "Inactive prodrug of d-amphetamine conjugated with L-lysine: enzymatically activated by red blood cells, delivering smooth continuous amphetamine over 12-14 hours without sharp peaks.",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.45, onsetScale: 1.6, riseScale: 2.4, plateauMin: 360, fallScale: 1.6 }
+            ]
+          }
+        ],
+        'Paroxetine': [
+          {
+            id: 'IR',
+            shortFr: 'Déroxat LI',
+            shortEn: 'Paxil / Déroxat IR',
+            badgeFr: 'Déroxat LI',
+            badgeEn: 'Paxil IR',
+            titleFr: "Déroxat LI (Comprimé pelliculé sécable — 100% immédiat)",
+            titleEn: "Paxil / Déroxat IR (Scored tablet — 100% immediate)",
+            descFr: "Forme conventionnelle à libération immédiate (prise unique matinale).",
+            descEn: "Standard immediate-release tablet (once-daily morning).",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'PAXIL_CR',
+            shortFr: 'Paxil CR',
+            shortEn: 'Paxil CR',
+            badgeFr: 'Paxil CR',
+            badgeEn: 'Paxil CR',
+            titleFr: "Paxil CR / Déroxat LP (Matrice géomatrice multicouche)",
+            titleEn: "Paxil CR (Geomatrix controlled release tablet)",
+            descFr: "Matrice multicouche Geomatrix régulant la libération dans l'intestin grêle pour réduire les nausées initiales.",
+            descEn: "Geomatrix controlled-release technology delaying release to decrease nausea.",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.50, onsetScale: 1.6, riseScale: 2.4, plateauMin: 280, fallScale: 1.5 }
+            ]
+          }
+        ],
+        'Baclofen': [
+          {
+            id: 'IR',
+            shortFr: 'Liorésal LI',
+            shortEn: 'Lioresal IR',
+            badgeFr: 'Liorésal LI',
+            badgeEn: 'Lioresal IR',
+            titleFr: "Liorésal LI (Comprimé sécable 10-25 mg — 100% immédiat)",
+            titleEn: "Lioresal IR (Scored tablet — 100% immediate)",
+            descFr: "100% de la dose libérée immédiatement : pic en 1-2h, nécessite 3 à 4 prises par jour.",
+            descEn: "100% released immediately: peak in 1-2h, requiring 3-4 daily doses.",
+            isExtended: false,
+            waves: [
+              { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
+            ]
+          },
+          {
+            id: 'BACLOCUR_LP',
+            shortFr: 'Baclocur LP 12h',
+            shortEn: 'Baclofen ER 12h',
+            badgeFr: 'Baclocur LP 12h',
+            badgeEn: 'Baclofen ER 12h',
+            titleFr: "Baclocur LP 12h (Comprimé matriciel LP)",
+            titleEn: "Baclocur LP 12h (Sustained-release matrix)",
+            descFr: "Matrice assurant une diffusion étalée sur 12 heures, limitant les pics de somnolence.",
+            descEn: "Sustained-release matrix over 12 hours, reducing somnolence spikes and daily dose frequency.",
+            isExtended: true,
+            waves: [
+              { delayMin: 0, weight: 0.55, onsetScale: 1.5, riseScale: 2.2, plateauMin: 260, fallScale: 1.4 }
+            ]
+          }
         ]
-      },
-      genericOral: [
-        {
-          id: 'IR',
-          shortFr: 'LI (Immédiate 100%)',
-          shortEn: 'IR (Immediate 100%)',
-          badgeFr: 'LI',
-          badgeEn: 'IR',
-          titleFr: "Libération Immédiate (LI — 100% immédiat)",
-          titleEn: "Immediate Release (IR — 100% immediate)",
-          descFr: "100% de la dose est libéré immédiatement après la prise.",
-          descEn: "100% of the dose is released immediately after intake.",
-          isExtended: false,
-          waves: [
-            { delayMin: 0, weight: 1.0, onsetScale: 1.0, riseScale: 1.0, plateauMin: 0, fallScale: 1.0 }
-          ]
-        },
-        {
-          id: 'GENERIC_LP_12H_30_70',
-          shortFr: 'LP 12h Biphasique (30% LI + 70% LP)',
-          shortEn: 'Biphasic ER 12h (30% IR + 70% ER)',
-          badgeFr: 'LP 12h (30/70)',
-          badgeEn: 'ER 12h (30/70)',
-          titleFr: "Libération Prolongée 12h Biphasique (30% immédiat + 70% sur 12h)",
-          titleEn: "12h Biphasic Extended Release (30% immediate + 70% over 12h)",
-          descFr: "30% de la dose est libéré immédiatement (montée rapide et pic initial) et les 70% restants sont libérés en plateau sur 12 heures.",
-          descEn: "30% of the dose is released immediately (fast rise and initial peak) and the remaining 70% is released over 12 hours.",
-          isExtended: true,
-          waves: [
-            { delayMin: 0, weight: 0.50, onsetScale: 0.9, riseScale: 0.85, plateauMin: 0, fallScale: 0.85 },
-            { delayMin: 25, weight: 0.44, onsetScale: 1.1, riseScale: 1.5, plateauMin: 300, fallScale: 1.4 }
-          ]
-        },
-        {
-          id: 'GENERIC_LP_12H_MATRIX',
-          shortFr: 'LP 12h Matrice lente (Continue)',
-          shortEn: 'Slow Matrix ER 12h (Continuous)',
-          badgeFr: 'LP 12h (Matrice)',
-          badgeEn: 'ER 12h (Matrix)',
-          titleFr: "Libération Prolongée 12h Matricielle Continue (sans dose immédiate)",
-          titleEn: "12h Continuous Matrix Extended Release (no immediate bolus)",
-          descFr: "Montée lente et progressive sur 3 à 4h sans pic initial, suivie d'un plateau régulier sur 12 heures.",
-          descEn: "Slow gradual rise over 3-4h without an initial spike, followed by a steady 12-hour plateau.",
-          isExtended: true,
-          waves: [
-            { delayMin: 0, weight: 0.52, onsetScale: 1.8, riseScale: 2.8, plateauMin: 240, fallScale: 1.5 }
-          ]
-        },
-        {
-          id: 'GENERIC_LP_BIMODAL_50_50',
-          shortFr: 'LP Bimodale 8h (50% + 50% à +4h)',
-          shortEn: 'Bimodal ER 8h (50% + 50% at +4h)',
-          badgeFr: 'LP Bimodale (50/50 +4h)',
-          badgeEn: 'Bimodal ER (50/50 +4h)',
-          titleFr: "Libération Modifiée Bimodale (50% immédiat + 50% retardé à +4h)",
-          titleEn: "Bimodal Modified Release (50% immediate + 50% delayed at +4h)",
-          descFr: "La moitié de la dose (50%) est libérée immédiatement (T=0) et l'autre moitié (50%) est libérée 4 heures plus tard (double pic).",
-          descEn: "Half of the dose (50%) is released immediately (T=0) and the other half (50%) is released 4 hours later (dual peak).",
-          isExtended: true,
-          waves: [
-            { delayMin: 0, weight: 0.64, onsetScale: 0.9, riseScale: 0.8, plateauMin: 0, fallScale: 0.75 },
-            { delayMin: 215, weight: 0.64, onsetScale: 0.8, riseScale: 0.85, plateauMin: 0, fallScale: 0.9 }
-          ]
-        },
-        {
-          id: 'GENERIC_LP_OROS_22_78',
-          shortFr: 'LP Osmotique 12h (22% + 78%)',
-          shortEn: 'Osmotic ER 12h (22% + 78%)',
-          badgeFr: 'LP OROS 12h (22/78)',
-          badgeEn: 'OROS ER 12h (22/78)',
-          titleFr: "Libération Osmotique Continue 12h (22% immédiat + 78% équitable)",
-          titleEn: "12h Continuous Osmotic Release (22% immediate + 78% even)",
-          descFr: "22% de la dose totale est délivré immédiatement et les 78% restants sont délivrés de manière équitable sur 12 heures.",
-          descEn: "22% of the total dose is delivered immediately and the remaining 78% is delivered evenly over 12 hours.",
-          isExtended: true,
-          waves: [
-            { delayMin: 0, weight: 0.28, onsetScale: 0.9, riseScale: 0.8, plateauMin: 0, fallScale: 0.8 },
-            { delayMin: 40, weight: 0.52, onsetScale: 1.2, riseScale: 2.2, plateauMin: 260, fallScale: 1.4 }
-          ]
-        },
-        {
-          id: 'GENERIC_LP_24H',
-          shortFr: 'LP 24h (Continue 24h)',
-          shortEn: 'ER 24h (Continuous 24h)',
-          badgeFr: 'LP 24h',
-          badgeEn: 'ER 24h',
-          titleFr: "Libération Prolongée 24h (1 prise/jour sur 24h)",
-          titleEn: "24h Extended Release (Once-daily over 24h)",
-          descFr: "Montée lente puis libération continue sur 24 heures.",
-          descEn: "Slow rise followed by continuous release over 24 hours.",
-          isExtended: true,
-          waves: [
-            { delayMin: 0, weight: 0.40, onsetScale: 2.0, riseScale: 3.2, plateauMin: 720, fallScale: 2.0 }
-          ]
-        }
-      ]
+      }
     };
 
     function getReleaseProfilesFor(substanceName, roaName) {
@@ -2094,60 +2547,161 @@
       if (RELEASE_PROFILES_CATALOG.specific[substanceName]) {
         return RELEASE_PROFILES_CATALOG.specific[substanceName];
       }
-      return RELEASE_PROFILES_CATALOG.genericOral;
+      return [RELEASE_PROFILES_CATALOG.defaultImmediate];
     }
 
     function renderQuickReleasePills() {
       const container = document.getElementById('quick-release-container');
-      const pillsBox = document.getElementById('quick-release-pills');
+      const btnLi = document.getElementById('btn-release-type-li');
+      const btnLp = document.getElementById('btn-release-type-lp');
+      const indLi = document.getElementById('indicator-release-type-li');
+      const indLp = document.getElementById('indicator-release-type-lp');
+      const txtLi = document.getElementById('txt-release-type-li');
+      const txtLp = document.getElementById('txt-release-type-lp');
+      const lpBox = document.getElementById('quick-lp-dropdown-box');
+      const lpSelect = document.getElementById('quick-lp-select');
       const descBox = document.getElementById('quick-release-desc');
       const badgeEl = document.getElementById('quick-release-duration-badge');
       const titleEl = document.getElementById('txt-quick-release-title');
-      if (!container || !pillsBox || !selectedQuickSubstance) return;
+      const lpLbl = document.getElementById('txt-lp-dropdown-label');
+
+      if (!container || !btnLi || !btnLp || !selectedQuickSubstance) return;
 
       const rName = (selectedQuickRoa && selectedQuickRoa.name) ? selectedQuickRoa.name.toLowerCase() : 'oral';
-      const profiles = getReleaseProfilesFor(selectedQuickSubstance.name, rName);
-
-      if (profiles.length <= 1) {
-        selectedQuickReleaseProfile = profiles[0] || RELEASE_PROFILES_CATALOG.defaultImmediate;
+      if (rName !== 'oral') {
         container.classList.add('hidden');
         return;
       }
 
+      const profiles = getReleaseProfilesFor(selectedQuickSubstance.name, rName);
+      const irProfile = profiles.find(p => !p.isExtended);
+      const lpProfiles = profiles.filter(p => p.isExtended);
+
+      const hasIR = !!irProfile;
+      const hasLP = lpProfiles.length > 0;
+
       container.classList.remove('hidden');
+
       if (titleEl) {
-        titleEl.textContent = currentLang === 'fr'
-          ? 'Forme galénique / Libération (LI / LP / LM)'
-          : 'Release Formulation (IR / ER / MR)';
+        titleEl.textContent = currentLang === 'fr' ? 'Forme & Libération' : 'Formulation & Release';
       }
-
-      if (!selectedQuickReleaseProfile || !profiles.some(p => p.id === selectedQuickReleaseProfile.id)) {
-        selectedQuickReleaseProfile = profiles[0];
-      }
-
-      pillsBox.innerHTML = profiles.map(p => {
-        const isSelected = p.id === selectedQuickReleaseProfile.id;
-        const label = currentLang === 'fr' ? p.shortFr : p.shortEn;
-        return `
-          <button type="button" onclick="selectQuickReleaseProfile('${p.id}')"
-            class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold border transition flex items-center gap-1.5 cursor-pointer ${
-              isSelected
-                ? 'bg-amber-500/25 border-amber-400 text-amber-200 shadow-sm ring-1 ring-amber-400/40'
-                : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-            }">
-            <span class="w-2 h-2 rounded-full ${isSelected ? 'bg-amber-400' : 'bg-slate-600'}"></span>
-            <span>${label}</span>
-          </button>
+      if (lpLbl) {
+        lpLbl.innerHTML = `
+          <svg class="w-3 h-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          <span>${currentLang === 'fr' ? 'Matrice LP & Marque commerciale :' : 'ER Matrix & Brand name:'}</span>
         `;
-      }).join('');
-
-      if (badgeEl && selectedQuickReleaseProfile) {
-        badgeEl.textContent = currentLang === 'fr' ? selectedQuickReleaseProfile.badgeFr : selectedQuickReleaseProfile.badgeEn;
       }
+
+      // Ajuster le mode si le mode courant n'est pas disponible pour cette molécule
+      if (selectedQuickReleaseMode === 'IR' && !hasIR && hasLP) {
+        selectedQuickReleaseMode = 'ER';
+      } else if (selectedQuickReleaseMode === 'ER' && !hasLP && hasIR) {
+        selectedQuickReleaseMode = 'IR';
+      }
+
+      // Configuration du bouton LI
+      if (hasIR) {
+        btnLi.disabled = false;
+        btnLi.className = selectedQuickReleaseMode === 'IR'
+          ? "py-1.5 px-2.5 rounded-lg text-[11px] font-bold border transition flex items-center justify-center gap-1.5 cursor-pointer bg-amber-500/25 border-amber-400 text-amber-200 shadow-sm ring-1 ring-amber-400/40"
+          : "py-1.5 px-2.5 rounded-lg text-[11px] font-bold border transition flex items-center justify-center gap-1.5 cursor-pointer bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-900";
+        if (indLi) indLi.className = selectedQuickReleaseMode === 'IR' ? "w-2 h-2 rounded-full bg-amber-400" : "w-2 h-2 rounded-full bg-slate-600";
+        if (txtLi) txtLi.textContent = currentLang === 'fr' ? 'Forme LI (Immédiate)' : 'IR Form (Immediate)';
+      } else {
+        btnLi.disabled = true;
+        btnLi.className = "py-1.5 px-2.5 rounded-lg text-[11px] font-bold border transition flex items-center justify-center gap-1.5 cursor-not-allowed bg-slate-950/60 border-slate-900 text-slate-600 opacity-40";
+        if (indLi) indLi.className = "w-2 h-2 rounded-full bg-slate-700";
+        if (txtLi) txtLi.textContent = currentLang === 'fr' ? 'Pas de forme LI' : 'No IR available';
+      }
+
+      // Configuration du bouton LP
+      if (hasLP) {
+        btnLp.disabled = false;
+        btnLp.className = selectedQuickReleaseMode === 'ER'
+          ? "py-1.5 px-2.5 rounded-lg text-[11px] font-bold border transition flex items-center justify-center gap-1.5 cursor-pointer bg-amber-500/25 border-amber-400 text-amber-200 shadow-sm ring-1 ring-amber-400/40"
+          : "py-1.5 px-2.5 rounded-lg text-[11px] font-bold border transition flex items-center justify-center gap-1.5 cursor-pointer bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-900";
+        if (indLp) indLp.className = selectedQuickReleaseMode === 'ER' ? "w-2 h-2 rounded-full bg-amber-400" : "w-2 h-2 rounded-full bg-slate-600";
+        if (txtLp) txtLp.textContent = currentLang === 'fr' ? 'Forme LP (Prolongée)' : 'ER Form (Extended)';
+      } else {
+        btnLp.disabled = true;
+        btnLp.className = "py-1.5 px-2.5 rounded-lg text-[11px] font-bold border transition flex items-center justify-center gap-1.5 cursor-not-allowed bg-slate-950/60 border-slate-900 text-slate-600 opacity-40";
+        if (indLp) indLp.className = "w-2 h-2 rounded-full bg-slate-700";
+        if (txtLp) txtLp.textContent = currentLang === 'fr' ? 'Pas de forme LP' : 'No ER available';
+      }
+
+      // Gestion de la matrice active et du menu déroulant
+      if (selectedQuickReleaseMode === 'ER' && hasLP) {
+        if (lpBox) lpBox.classList.remove('hidden');
+
+        if (lpSelect) {
+          lpSelect.innerHTML = lpProfiles.map(p => {
+            const optLabel = currentLang === 'fr' ? p.shortFr : p.shortEn;
+            return `<option value="${p.id}">${optLabel}</option>`;
+          }).join('');
+
+          if (!selectedQuickReleaseProfile || !lpProfiles.some(p => p.id === selectedQuickReleaseProfile.id)) {
+            selectedQuickReleaseProfile = lpProfiles[0];
+          }
+          lpSelect.value = selectedQuickReleaseProfile.id;
+        }
+      } else {
+        if (lpBox) lpBox.classList.add('hidden');
+        selectedQuickReleaseProfile = irProfile || RELEASE_PROFILES_CATALOG.defaultImmediate;
+      }
+
+      // Badge durée / forme
+      if (badgeEl && selectedQuickReleaseProfile) {
+        if (selectedQuickReleaseMode === 'IR') {
+          badgeEl.textContent = currentLang === 'fr' ? (irProfile ? irProfile.badgeFr : 'Standard LI') : (irProfile ? irProfile.badgeEn : 'Standard IR');
+        } else {
+          badgeEl.textContent = currentLang === 'fr' ? selectedQuickReleaseProfile.badgeFr : selectedQuickReleaseProfile.badgeEn;
+        }
+      }
+
+      // Descriptif explicatif
       if (descBox && selectedQuickReleaseProfile) {
-        const title = currentLang === 'fr' ? selectedQuickReleaseProfile.titleFr : selectedQuickReleaseProfile.titleEn;
-        const desc = currentLang === 'fr' ? selectedQuickReleaseProfile.descFr : selectedQuickReleaseProfile.descEn;
-        descBox.innerHTML = `<div class="font-bold text-amber-300 mb-0.5">${title}</div><div class="text-slate-300">${desc}</div>`;
+        if (selectedQuickReleaseMode === 'IR' && !hasLP) {
+          descBox.innerHTML = `
+            <div class="font-bold text-amber-300 mb-0.5">${currentLang === 'fr' ? 'Libération Immédiate conventionnelle' : 'Standard Immediate Release'}</div>
+            <div class="text-slate-300">${currentLang === 'fr' ? "Forme galénique standard à libération immédiate (100% de la dose délivrée). Ce médicament n'existe pas sous forme de libération prolongée (LP)." : "Standard immediate release formulation (100% active dose). This medication does not exist in an extended-release (ER) form."}</div>
+          `;
+        } else {
+          const title = currentLang === 'fr' ? selectedQuickReleaseProfile.titleFr : selectedQuickReleaseProfile.titleEn;
+          const desc = currentLang === 'fr' ? selectedQuickReleaseProfile.descFr : selectedQuickReleaseProfile.descEn;
+          descBox.innerHTML = `<div class="font-bold text-amber-300 mb-0.5">${title}</div><div class="text-slate-300">${desc}</div>`;
+        }
+      }
+    }
+
+    function setQuickReleaseMode(mode) {
+      if (!selectedQuickSubstance) return;
+      const rName = (selectedQuickRoa && selectedQuickRoa.name) ? selectedQuickRoa.name.toLowerCase() : 'oral';
+      const profiles = getReleaseProfilesFor(selectedQuickSubstance.name, rName);
+      const irProfile = profiles.find(p => !p.isExtended);
+      const lpProfiles = profiles.filter(p => p.isExtended);
+
+      if (mode === 'IR') {
+        if (!irProfile) return;
+        selectedQuickReleaseMode = 'IR';
+        selectedQuickReleaseProfile = irProfile;
+      } else if (mode === 'ER') {
+        if (lpProfiles.length === 0) return;
+        selectedQuickReleaseMode = 'ER';
+        selectedQuickReleaseProfile = lpProfiles[0];
+      }
+      renderQuickReleasePills();
+    }
+
+    function onQuickLpSelectChange(profileId) {
+      if (!selectedQuickSubstance) return;
+      const rName = (selectedQuickRoa && selectedQuickRoa.name) ? selectedQuickRoa.name.toLowerCase() : 'oral';
+      const profiles = getReleaseProfilesFor(selectedQuickSubstance.name, rName);
+      const lpProfiles = profiles.filter(p => p.isExtended);
+      const found = lpProfiles.find(p => p.id === profileId) || lpProfiles[0];
+      if (found) {
+        selectedQuickReleaseProfile = found;
+        selectedQuickReleaseMode = 'ER';
+        renderQuickReleasePills();
       }
     }
 
@@ -2157,6 +2711,7 @@
       const profiles = getReleaseProfilesFor(selectedQuickSubstance.name, rName);
       const found = profiles.find(p => p.id === profileId) || profiles[0];
       selectedQuickReleaseProfile = found;
+      selectedQuickReleaseMode = found.isExtended ? 'ER' : 'IR';
       renderQuickReleasePills();
     }
 
@@ -2514,6 +3069,7 @@
       }
       selectedQuickRoa = chosenRoa;
 
+      selectedQuickReleaseMode = 'IR';
       selectedQuickReleaseProfile = null;
       renderQuickRoaPills();
       renderQuickReleasePills();
@@ -2586,6 +3142,7 @@
         foundRoa = { name: rName, dose: { units: 'mg' } };
       }
       selectedQuickRoa = foundRoa;
+      selectedQuickReleaseMode = 'IR';
       selectedQuickReleaseProfile = null;
       renderQuickRoaPills();
       renderQuickReleasePills();

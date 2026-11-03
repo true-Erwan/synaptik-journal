@@ -1427,3 +1427,121 @@ Deux incohérences pharmacologiques majeures subsistaient sur la fiche de l'**Op
 - [`substances.json (FR)`](file:///c:/Users/droll/Desktop/synaptik%20journal/psychonautwiki-journal-android-main/psychonautwiki-journal-android-main/app/src/main/res/raw-fr/substances.json) : 388 substances enrichies à 100%.
 - [`substances.json (EN)`](file:///c:/Users/droll/Desktop/synaptik%20journal/psychonautwiki-journal-android-main/psychonautwiki-journal-android-main/app/src/main/res/raw/substances.json) : 388 substances enrichies à 100% de manière symétrique.
 - [`simulateur_synaptik.html`](file:///c:/Users/droll/Desktop/synaptik%20journal/simulateur_synaptik.html) et artefact [`simulator.html`](file:///C:/Users/droll/.gemini/antigravity/brain/4d71d2db-7ecc-4fb0-9da8-047c03f36ad5/simulator.html) : Recompilés et synchronisés.
+
+
+---
+
+## 50. Restructuration Galénique Réelle : Suppression des Matrices LP Fictives et Affichage des Noms Commerciaux par Marque (OxyContin, Oxycodone LP, Ritaline LP, Concerta...)
+
+### Problématiques Résolues
+1. **Prolifération de matrices galéniques fictives** : Auparavant, un fallback générique (`genericOral` / `genericOralProfiles`) proposait 6 formes galéniques différentes (LP 12h Biphasique, LP 12h Matrice lente, LP Bimodale 8h, LP Osmotique 12h, LP 24h) pour n'importe quelle molécule prise par voie orale, y compris celles n'existant qu'en libération immédiate (Paracétamol, Diazépam, Cocaïne, LSD, Caféine, etc.). Cette situation était pharmacologiquement incohérente.
+2. **Absence de désignation commerciale explicite** : Les matrices spécifiques manquaient de clarté commerciale immédiate dans les boutons de sélection, rendant difficile pour l'utilisateur de distinguer en un coup d'œil un *OxyContin LP 12h* (biphasique avec pic initial 30/70) d'un *Oxycodone LP 12h Générique* (matrice continue sans pic), ou une *Ritaline LP* d'un *Concerta LP*.
+
+### Modifications & Optimisations Réalisées
+1. **Suppression définitive du fallback générique fictif** :
+   - `genericOral` (dans le simulateur web interactif) et `genericOralProfiles` (dans [`ReleaseProfile.kt`](file:///c:/Users/droll/Desktop/synaptik%20journal/psychonautwiki-journal-android-main/psychonautwiki-journal-android-main/app/src/main/java/com/isaakhanimann/journal/data/substances/classes/roa/ReleaseProfile.kt)) ont été supprimés.
+   - Désormais, **seules les molécules disposant réellement de formes galéniques LP ou modifiées dans le commerce** affichent des choix de matrices.
+   - Pour les ~365 autres molécules n'existant qu'en forme conventionnelle (ou par voie non orale), seule la forme immédiate réelle (`LI (100% Immédiate)`) est affichée avec la mention explicite qu'aucune matrice LP n'existe pour cette substance, et le sélecteur est masqué hors voie orale.
+2. **Identification commerciale exhaustive par marque et mécanisme galénique** :
+   - **Oxycodone** :
+     - `OxyNorm / OxyNormOro (LI 100%)` (Badge : `OxyNorm LI`) — 100% immédiat, durée 4-6h.
+     - `OxyContin LP 12h (30% LI + 70% LP)` (Badge : `OxyContin LP 12h`) — Matrice AcroContin brevetée avec pic initial haut à +1h15-1h30.
+     - `Oxycodone LP 12h Générique` (Badge : `Oxycodone LP 12h Générique`) — Matrice continue lente sans fraction immédiate en surface, sans pic initial.
+     - `Oxycodone LP 24h / Targinact` (Badge : `Oxycodone LP 24h`) — Matrice continue 24 heures en prise unique quotidienne.
+   - **Méthylphénidate** :
+     - `Ritaline LI 10 mg (100% immédiat)` (Badge : `Ritaline LI`) — 100% immédiat, durée 3-4h avec descente rapide.
+     - `Ritaline LP 8h / Medikinet LM` (Badge : `Ritaline LP (50/50)`) — Bimodale 50% LI + 50% LP à +4h (double pic franc).
+     - `Quasym LP 8h` (Badge : `Quasym LP (30/70)`) — Microgranules 30% immédiat + 70% retardé après-midi.
+     - `Concerta LP 12h (OROS Pompe Osmotique 22/78)` (Badge : `Concerta LP (OROS)`) — Système osmotique ALZA/OROS sur 12h.
+   - **Morphine** :
+     - `Actiskénan / Sevredol (LI 100%)` (Badge : `Actiskénan LI`) — 100% immédiat pour accès douloureux paroxystiques.
+     - `Skénan LP 12h / Moscontin` (Badge : `Skénan LP 12h`) — Microgranules à libération prolongée sur 12h.
+     - `Kapanol LP 24h / Kadian` (Badge : `Kapanol LP 24h`) — Microgranules polymériques 24 heures.
+   - **Tramadol** :
+     - `Topalgic LI / Contramal LI (100% immédiat)` (Badge : `Topalgic LI`) — Immédiat 50 mg, durée 5-7h.
+     - `Topalgic LP 12h / Contramal LP` (Badge : `Topalgic LP 12h`) — Matrice 12 heures en 2 prises/jour.
+     - `Monoalgic LP 24h / Monocrixo` (Badge : `Monoalgic LP 24h`) — Matrice 24 heures en monoprise matinale.
+   - **Hydromorphone** :
+     - `Hydromorphone LI` (Badge : `Hydromorphone LI`) — Immédiat 4-5h.
+     - `Sophidone LP 12h` (Badge : `Sophidone LP 12h`) — Microgranules 12 heures.
+     - `Jurnista LP 24h (OROS)` (Badge : `Jurnista LP 24h`) — Système osmotique Push-Pull 24h sans pic.
+   - **Amphétamine** :
+     - `Dexedrine / Amphétamine LI` (Badge : `Amphétamine LI`) — 100% immédiat 4-6h.
+     - `Adderall XR 12h` (Badge : `Adderall XR 12h`) — Microbilles bimodales 50% immédiat + 50% retardé à +4h.
+   - **Kétoprofène** :
+     - `Prophénid LI / Toprec` (Badge : `Prophénid LI`) — Immédiat 4-6h.
+     - `Bi-Prophénid LP 12h` (Badge : `Bi-Prophénid LP 12h`) — Comprimé sécable bicouche 50% immédiat + 50% matriciel 12h.
+     - `Prophénid LP 24h` (Badge : `Prophénid LP 24h`) — Gélule de microgranules 200 mg 24 heures.
+   - **Diclofénac** :
+     - `Voltarène LI 50 mg` (Badge : `Voltarène LI`) — Gastro-résistant immédiat.
+     - `Voltarène LP 75 mg` (Badge : `Voltarène LP 75`) — Matrice hydrophile 12 heures.
+     - `Voltarène LP 100 mg` (Badge : `Voltarène LP 100`) — Matrice LP 24 heures en prise unique le soir.
+   - **Alprazolam** :
+     - `Xanax LI` (Badge : `Xanax LI`) — Comprimé conventionnel sécable 5-7h.
+     - `Xanax XR / Alprazolam LP 12h` (Badge : `Xanax XR 12h`) — Matrice hydrophile 12 heures sans pic brutal.
+   - **Zolpidem** :
+     - `Stilnox LI 10 mg` (Badge : `Stilnox LI`) — Inducteur de sommeil immédiat 3-4h.
+     - `Stilnox CR / Ambien CR` (Badge : `Stilnox CR`) — Comprimé bicouche breveté 60% immédiat + 40% sur 6 heures.
+   - **Mélatonine** :
+     - `Mélatonine LI` (Badge : `Mélatonine LI`) — Immédiat 2-3h.
+     - `Circadin LP 2 mg / Slenyto` (Badge : `Circadin LP 8h`) — Matrice mimant le profil physiologique nocturne sur 8h.
+   - **Venlafaxine** : `Effexor LI` vs `Effexor LP 24h` (Microgranules à membrane polymérique).
+   - **Bupropion** : `Wellbutrin IR` vs `Zyban LP 12h / Wellbutrin SR` vs `Wellbutrin XL 24h`.
+   - **Quétiapine** : `Xeroquel LI / Séroquel` vs `Xeroquel LP 24h / Seroquel XR`.
+   - **Lithium** : `Téralithe 250 mg LI` vs `Téralithe LP 400 mg` (Comprimé sécable matriciel).
+   - **Valproate** : `Dépakine LI` vs `Dépakine Chrono LP 12h / Dépakote LP`.
+   - **Carbamazépine** : `Tégrétol LI 200 mg` vs `Tégrétol LP 12h`.
+   - **Propranolol** : `Avlocardyl LI 40 mg` vs `Avlocardyl LP 160 mg` (Microgranules 24h).
+   - **Prégabaline** : `Lyrica LI` vs `Lyrica CR 24h` (Matrice gastro-rétentive).
+   - **Dihydrocodéine** : `Dicodin LP 12h` (Comprimé enrobé LP).
+   - **Lisdexamfétamine** : `Vyvanse / Elvanse` (Prodrogue à activation érythrocytaire continue sur 12-14h).
+   - **Paroxétine** : `Déroxat LI` vs `Paxil CR / Déroxat LP` (Matrice géomatrice multicouche).
+   - **Baclofène** : `Liorésal LI` vs `Baclocur LP 12h`.
+
+### Fichiers modifiés
+- [`build_bilingual_simulator.py`](file:///C:/Users/droll/.gemini/antigravity/brain/4d71d2db-7ecc-4fb0-9da8-047c03f36ad5/scratch/build_bilingual_simulator.py)
+- [`simulateur_synaptik.html`](file:///c:/Users/droll/Desktop/synaptik%20journal/simulateur_synaptik.html)
+- [`simulator.html (Artefact)`](file:///C:/Users/droll/.gemini/antigravity/brain/4d71d2db-7ecc-4fb0-9da8-047c03f36ad5/simulator.html)
+- [`ReleaseProfile.kt`](file:///c:/Users/droll/Desktop/synaptik%20journal/psychonautwiki-journal-android-main/psychonautwiki-journal-android-main/app/src/main/java/com/isaakhanimann/journal/data/substances/classes/roa/ReleaseProfile.kt)
+- [`MODIFICATIONS.md`](file:///c:/Users/droll/Desktop/synaptik%20journal/MODIFICATIONS.md)
+
+
+---
+
+## 51. Sélecteur Hiérarchique Galénique (Forme LI vs Forme LP) et Menu Déroulant des Spécialités Commerciales (OxyContin, Concerta, Ritaline LP...)
+
+### Problématiques Résolues
+1. **Absence de distinction claire entre LI et LP** : Toutes les formes (immédiate et prolongée) étaient présentées pêle-mêle sur une même ligne de boutons sans hiérarchisation clinique.
+2. **Recherche encombrée de déclinaisons** : L'utilisateur souhaitait que la recherche se focalise sur les molécules pures, et que le choix galénique se fasse obligatoirement après la sélection de la molécule.
+3. **Nomenclature technique encombrée de ratios** : Les libellés comportaient des fractions mathématiques cryptiques (ex: *OxyContin (30/70)*, *Concerta (22/78)*, *Ritaline LP (50/50)*) au lieu de mettre en avant la marque commerciale et le dosage horaire reconnus par les prescripteurs et les usagers.
+
+### Modifications et Fonctionnalités Implémentées
+1. **Recherche focalisée sur les molécules** :
+   - La barre de recherche rapide et les suggestions affichent la molécule principale (`Oxycodone`, `Méthylphénidate`, `Morphine`, `Tramadol`...) avec ses alias usuels entre parenthèses légères, évitant les doublons artificiels dans la liste de recherche.
+2. **Sélecteur hiérarchique à 2 niveaux (LI vs LP)** :
+   - Après sélection de la molécule et sous voie orale, l'interface présente deux boutons majeurs :
+     - **`[Forme LI (Immédiate)]`** : Active la délivrance conventionnelle immédiate (100% de la dose délivrée sans étalement).
+     - **`[Forme LP (Prolongée)]`** : Débloque et affiche le menu déroulant des matrices de libération prolongée.
+   - **Protection anti-erreur clinique** :
+     - Si la molécule n'existe pas en LP (ex: *Paracétamol, Diazépam, Cocaïne, LSD, MDMA, Ibuprofène*), le bouton LP est désactivé avec le label grisé `Pas de forme LP` et l'explication qu'aucune formulation LP n'existe.
+     - Si la molécule n'existe qu'en LP (ex: *Dihydrocodéine / Dicodin LP, Lisdexamfétamine / Vyvanse*), le bouton LI est désactivé avec le label `Pas de forme LI` et le mode LP est sélectionné par défaut.
+3. **Menu déroulant défilant des spécialités commerciales LP** :
+   - Dès que le bouton **LP** est actif, le conteneur `<div id="quick-lp-dropdown-box">` se déploie avec un menu déroulant (`<select id="quick-lp-select">`) listant exclusivement les formes LP réelles de la molécule.
+   - **Suppression des ratios cryptiques** : Remplacement des mentions `(30/70)` ou `(22/78)` par le nom clair de la spécialité commerciale :
+     - *Oxycodone* : `OxyContin LP 12h`, `Oxycodone LP 12h (Générique)`, `Oxycodone LP 24h`
+     - *Méthylphénidate* : `Ritaline LP 8h`, `Quasym LP 8h`, `Concerta LP 12h`
+     - *Morphine* : `Skénan LP 12h`, `Kapanol LP 24h`
+     - *Tramadol* : `Topalgic LP 12h`, `Monoalgic LP 24h`
+     - *Kétoprofène* : `Bi-Prophénid LP 12h`, `Prophénid LP 24h`
+     - *Diclofénac* : `Voltarène LP 75 mg`, `Voltarène LP 100 mg`
+     - *Bupropion* : `Zyban LP 12h`, `Wellbutrin XL 24h`
+     - Molécules à spécialité LP unique : affichage direct du nom unique du médicament (`Xanax XR 12h`, `Stilnox CR`, `Circadin LP 8h`, `Effexor LP 24h`, `Téralithe LP 400`, `Dépakine Chrono LP 12h`, `Tégrétol LP 12h`, `Avlocardyl LP 160`, `Lyrica CR 24h`, `Dicodin LP 12h`, `Vyvanse / Elvanse`, `Paxil CR`, `Baclocur LP 12h`).
+4. **Synchronisation dynamique intégrale** :
+   - Le changement dans le menu déroulant met immédiatement à jour le badge de durée, l'encadré descriptif de la pharmacocinétique, et alimente la modélisation mathématique du graphique (ondes cinétiques, pic Cmax, plateau et cumul des prises).
+
+### Fichiers modifiés
+- [`build_bilingual_simulator.py`](file:///C:/Users/droll/.gemini/antigravity/brain/4d71d2db-7ecc-4fb0-9da8-047c03f36ad5/scratch/build_bilingual_simulator.py)
+- [`simulateur_synaptik.html`](file:///c:/Users/droll/Desktop/synaptik%20journal/simulateur_synaptik.html)
+- [`simulator.html (Artefact)`](file:///C:/Users/droll/.gemini/antigravity/brain/4d71d2db-7ecc-4fb0-9da8-047c03f36ad5/simulator.html)
+- [`ReleaseProfile.kt`](file:///c:/Users/droll/Desktop/synaptik%20journal/psychonautwiki-journal-android-main/psychonautwiki-journal-android-main/app/src/main/java/com/isaakhanimann/journal/data/substances/classes/roa/ReleaseProfile.kt)
+- [`MODIFICATIONS.md`](file:///c:/Users/droll/Desktop/synaptik%20journal/MODIFICATIONS.md)
