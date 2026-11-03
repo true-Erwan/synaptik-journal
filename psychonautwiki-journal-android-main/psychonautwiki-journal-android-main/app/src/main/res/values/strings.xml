@@ -1,0 +1,606 @@
+<resources>
+    <string name="app_name">Journal</string>
+    <string name="follow_system">Follow System</string>
+    <string name="settings_language">Language</string>
+    <string name="stats">Stats</string>
+    <string name="journal">Journal</string>
+    <string name="drugs">Drugs</string>
+    <string name="safer">Safer</string>
+    <string name="settings">Settings</string>
+    <string name="statistics">Statistics</string>
+    <string name="statistics_for">Statistics for %1$s</string>
+    <string name="nothing_to_show_yet">Nothing to show yet</string>
+    <string name="stats_empty_description">Start logging your ingestions to see an overview of your consumption pattern.</string>
+    <string name="experiences_since">Experiences since %1$s</string>
+    <string name="substance_counted_once_per_experience">Substance counted once per experience</string>
+    <string name="experience_count">" experience"</string>
+    <string name="experiences_count">" experiences"</string>
+    <string name="total">total %1$s</string>
+    <string name="no_ingestions_since">No ingestions since %1$s</string>
+    <string name="no_ingestions_description">Choose a longer duration range to see statistics.</string>
+    <string name="search_experiences">Search experiences</string>
+    <string name="no_results">No results</string>
+    <string name="no_favorite_experience_titles_match_your_search">No favorite experience titles match your search.</string>
+    <string name="no_experience_titles_match_your_search">No experience titles match your search.</string>
+    <string name="no_favorites">No favorites</string>
+    <string name="no_favorites_description">Mark experiences as favorites to find them quickly.</string>
+    <string name="no_experiences_yet">No experiences yet</string>
+    <string name="add_your_first_ingestion">Add your first ingestion.</string>
+    <string name="ingestion">Ingestion</string>
+    <string name="search">Search</string>
+    <string name="close">Close</string>
+    <string name="navigate_to_calendar">Navigate to calendar</string>
+    <string name="add">Add</string>
+    <string name="scroll_to_top">Scroll to top</string>
+    <string name="regular_time">Regular time</string>
+    <string name="time_relative_to_now">Time relative to now</string>
+    <string name="is_favorite">Is favorite</string>
+    <string name="is_not_favorite">Is not favorite</string>
+    <string name="search_off">Search off</string>
+    <string name="search_substances">Search substances</string>
+    <string name="quick_logging">Quick logging</string>
+    <string name="custom_substances">Custom substances</string>
+    <string name="custom_units">Custom units</string>
+    <string name="substances">Substances</string>
+    <string name="add_custom_substance">Add custom substance</string>
+    <string name="no_matching_substance_found">No matching substance found</string>
+    <string name="keyboard">Keyboard</string>
+    <string name="log_unknown_dose">Log unknown dose</string>
+    <string name="create_new_unit">Create new unit</string>
+    <string name="estimated_standard_deviation">Estimated standard deviation</string>
+    <string name="estimate">Estimate</string>
+    <string name="dose">Dose</string>
+    <string name="next">Next</string>
+    <string name="cancel">Cancel</string>
+    <string name="safer_sniffing">Safer sniffing</string>
+    <string name="safer_plugging">Safer plugging</string>
+    <string name="volumetric_liquid_dosing">Volumetric liquid dosing</string>
+    <string name="create_a_custom_unit">Create a custom unit</string>
+    <string name="units">Units</string>
+    <string name="pure_dose">Pure Dose</string>
+    <string name="dosage_warning">Dosage warning</string>
+    <string name="dosage_warning_description">There is no dosage info for this administration route. Research dosages somewhere else.</string>
+    <string name="don_t_know_the_dose">Don\'t know the dose?</string>
+    <string name="dont_know_the_dose_description">You can log an unknown dose. But note that administering the wrong dosage of a substance can lead to negative experiences such as extreme anxiety, uncomfortable physical side effects, hospitalization, or (in extreme cases) death.</string>
+    <string name="purity">Purity</string>
+    <string name="purity_invalid">Purity must be between 1 and 100%</string>
+    <string name="impure_dose">Impure dose</string>
+    <string name="point_in_time">Point in time</string>
+    <string name="time_range">Time range</string>
+    <string name="update_time_to_now">Update time to now</string>
+    <string name="start">Start:</string>
+    <string name="time">Time</string>
+    <string name="experience">Experience</string>
+    <string name="new_experience">New experience</string>
+    <string name="new_experience_title">New experience title</string>
+    <string name="consumed_by">Consumed by: %1$s</string>
+    <string name="choose_other_consumer">Choose other consumer</string>
+    <string name="consumer">Consumer</string>
+    <string name="enter_new_consumer">Enter new consumer</string>
+    <string name="new_consumer_name">New consumer name</string>
+    <string name="ingestion_note">Ingestion note</string>
+    <string name="something_color">%1$s color</string>
+    <string name="notes">Notes</string>
+    <string name="copy">Copy</string>
+    <string name="part_of">Part of %1$s</string>
+    <string name="part_of_new_experience">Part of new experience</string>
+    <string name="interactions">Interactions</string>
+    <string name="explanations">Explanations</string>
+    <string name="expand_timeline">Expand timeline</string>
+    <string name="location">Location: %1$s</string>
+    <string name="shulgin_ratings">Shulgin ratings</string>
+    <string name="timed_notes">Timed notes</string>
+    <string name="your_cumulative_doses">Your cumulative doses</string>
+    <string name="effect_timeline">Effect timeline</string>
+    <string name="info">Info</string>
+    <string name="close_disclaimer">Close disclaimer</string>
+    <string name="time_display_option">Time display option</string>
+    <string name="check">Check</string>
+    <string name="edit_options">Edit options</string>
+    <string name="delete_experience">Delete experience?</string>
+    <string name="this_will_also_delete_all_its_ingestions">This will also delete all its ingestions.</string>
+    <string name="delete">Delete</string>
+    <string name="edit_title_notes_location">Edit title/notes/location</string>
+    <string name="edit_experience">Edit experience</string>
+    <string name="unmark_favorite">Unmark favorite</string>
+    <string name="mark_favorite">Mark favorite</string>
+    <string name="add_options">Add options</string>
+    <string name="add_ingestion">Add Ingestion</string>
+    <string name="add_timed_note">Add timed note</string>
+    <string name="add_shulgin_rating">Add Shulgin rating</string>
+    <string name="last_ingestion_was">"Last ingestion was "</string>
+    <string name="last_ingestion_in">"Last ingestion in "</string>
+    <string name="start_is_in">"Start is in "</string>
+    <string name="now">"Now "</string>
+    <string name="in_since_start">" in (since start)"</string>
+    <string name="donate">Donate</string>
+    <string name="buy_me_a_coffee">Buy me a coffee</string>
+    <string name="paypal_donate">Paypal donate</string>
+    <string name="ui">UI</string>
+    <string name="substance_colors">Substance colors</string>
+    <string name="interaction_settings">Interaction settings</string>
+    <string name="hide_dosage_dots">Hide dosage dots</string>
+    <string name="hide_timeline">Hide timeline</string>
+    <string name="independent_substance_heights">Independent substance heights</string>
+    <string name="independent_substance_heights_description">"Enable this setting if you want the timeline of different substances and routes of administration (roas) to be independent. Then ingestions of different substances and roas will always take the full height of the timeline.\n\nIf this setting is disabled then timelines of different substances have a height relative to each other. In that case the average of the common dose is used as the point to compare it to.\nE.g. if the oral average common dose of MDMA is 100mg and the average common dose of insufflated MDMA is 50mg then the timeline for 100mg of oral MDMA is the same height as for 50mg of insufflated MDMA.\nThis is also applied across substances. E.g. if the common dose of oral 2C-B is 20mg then the timeline of 40mg oral 2C-B will be twice as high as 100mg of oral MDMA.\n                                "</string>
+    <string name="app_data">App data</string>
+    <string name="want_to_export">Export?</string>
+    <string name="export_description">This will export all your data from the app into a file so you can send it to someone or import it again on a new phone</string>
+    <string name="export">Export</string>
+    <string name="want_to_import_file">Import file?</string>
+    <string name="import_description">Import a file that was exported before. Note that this will delete the data that you already have in the app.</string>
+    <string name="import_file">Import</string>
+    <string name="delete_everything">Delete everything</string>
+    <string name="delete_everything_description">This will delete all your experiences, ingestions and custom substances.</string>
+    <string name="deleted_everything">Deleted everything</string>
+    <string name="feedback">Feedback</string>
+    <string name="question_bug_report">Question, bug report</string>
+    <string name="app">App</string>
+    <string name="source_code">Source Code</string>
+    <string name="version">Version %1$s</string>
+    <string name="share">Share</string>
+    <string name="add_custom_unit">Add custom unit</string>
+    <string name="no_custom_units_yet">No custom units yet</string>
+    <string name="no_custom_units_description">Add your first unit</string>
+    <string name="no_custom_units_found">No custom units found</string>
+    <string name="no_custom_units_found_description">No custom unit matches your search</string>
+    <string name="interaction_alerts">Interaction alerts</string>
+    <string name="interaction_alerts_description">Get warnings about interactions with following substances, even if you haven\'t logged them.</string>
+    <string name="combinations">Combinations</string>
+    <string name="safer_use">Safer use</string>
+    <string name="_1_research">1. Research</string>
+    <string name="_1_research_content">In advance research the duration, subjective effects and potential adverse effects which the substance or combination of substances are likely to produce.\nRead the info in here and also the PsychonautWiki article. Its best to cross-reference with other sources (Tripsit, Erowid, Wikipedia, Bluelight, Reddit, etc). There is no rush.</string>
+    <string name="_2_testing">2. Testing</string>
+    <string name="_2_testing_content">Test your substance with anonymous and free drug testing services. If those are not available in your country, use reagent testing kits. Don\'t trust your dealer to sell reliable product. Its better to have a tested stash instead of relying on a source spontaneously.</string>
+    <string name="open_link">Open link</string>
+    <string name="drug_testing_services">Drug testing services</string>
+    <string name="reagent_testing">Reagent testing</string>
+    <string name="_3_dosage">3. Dosage</string>
+    <string name="_3_dosage_content">Know your dose, start small and wait. A full stomach can delay the onset of a swallowed ingestion by hours. A dose that\'s easy for somebody with a tolerance might be too much for you.\n\nInvest in a milligram scale so you can accurately weigh your dosages. Bear in mind that milligram scales under %1$c1000 cannot accurately weigh out doses below 50 mg and are highly inaccurate under 10 - 15 mg. If the amounts of the drug are smaller, use volumetric dosing (dissolving in water or alcohol to make it easier to measure).\n\nMany substances do not have linear dose-response curves, meaning that doubling the dose amount will cause a greater than double increase (and rapidly result in overwhelming, unpleasant, and potentially dangerous experiences), therefore doses should only be adjusted upward with slight increases (e.g. 1/4 to 1/2 of the previous dose).</string>
+    <string name="dosage_guide">Dosage guide</string>
+    <string name="dosage_classification">Dosage classification</string>
+    <string name="_4_set_and_setting">4. Set and setting</string>
+    <string name="_4_set_and_setting_content">Set: Make sure your thoughts, desires, feelings, general mood, and any preconceived notions or expectations about what you are about to experience are conducive to the experience. Make sure your body is well. Better not to take it if you feel sick, injured or generally unhealthy.\n\nSetting: An unfamiliar, uncontrollable or otherwise disagreeable social or physical environment may result in an unpleasant or dangerous experience. Choose an environment that provides a sense of safety, familiarity, control, and comfort. For using hallucinogens (psychedelics, dissociatives and deliriants) refer to the safer hallucinogen guide.</string>
+    <string name="safer_hallucinogen_guide">Safer hallucinogen guide</string>
+    <string name="_5_combinations">5. Combinations</string>
+    <string name="_5_combinations_content">Don\'t combine drugs, including Alcohol, without research on the combo. The most common cause of substance-related deaths is the combination of depressants (such as opiates, benzodiazepines, or alcohol) with other depressants.</string>
+    <string name="responsible_drug_use_article">Responsible drug use article</string>
+    <string name="responsible_drug_use">Responsible drug use</string>
+    <string name="recovery_position_video">Recovery position video</string>
+    <string name="_10_recovery_position">10. Recovery position</string>
+    <string name="_10_recovery_position_content">If someone is unconscious and breathing place them into Recovery Position to prevent death by the suffocation of vomit after a drug overdose.\nHave the contact details of help services to hand in case of urgent need.</string>
+    <string name="_9_safety_of_others">9. Safety of others</string>
+    <string name="_9_safety_of_others_content">Don\'t drive, operate heavy machinery, or otherwise be directly or indirectly responsible for the safety or care of another person while intoxicated.</string>
+    <string name="_8_reflection">8. Reflection</string>
+    <string name="_8_reflection_content">Carefully monitor the frequency and intensity of any substance use to ensure it is not sliding into abuse and addiction. In particular, many stimulants, opioids, and depressants are known to be highly addictive.</string>
+    <string name="_7_allergy_tests">7. Allergy tests</string>
+    <string name="_7_allergy_tests_content">Simply dose a minuscule amount of the substance (e.g. 1/10 to 1/4 of a regular dose) and wait several hours to verify that you do not exhibit an unusual or idiosyncratic response.</string>
+    <string name="administration_routes_info">Administration routes info</string>
+    <string name="_6_administration_routes">6. Administration routes</string>
+    <string name="_6_administration_routes_content">Don\'t share snorting equipment (straws, banknotes, bullets) to avoid blood-borne diseases such as Hepatitis C that can be transmitted through blood amounts so small you can\'t notice. Injection is the the most dangerous route of administration and highly advised against. If you are determined to inject, don\'t share injection materials and refer to the safer injection guide.</string>
+    <string name="swiss_combination_checker">Swiss combination checker</string>
+    <string name="tripsit_combination_checker">Tripsit combination checker</string>
+    <string name="full_stomach_disclaimer">A full stomach may delay the onset of oral ingestions by approx. 3 hours.</string>
+    <string name="dose_disclaimer">Always start with lower doses due to differences between individual body weight, tolerance, metabolism, and personal sensitivity.</string>
+    <string name="export_file">Export File</string>
+    <string name="import_file_title">Import file</string>
+    <string name="done">Done</string>
+    <string name="confirm_delete_substance">Delete substance?</string>
+    <string name="delete_substance">Delete substance</string>
+    <string name="edit_custom_substance">Edit custom substance</string>
+    <string name="clear_selection">Clear Selection</string>
+    <string name="back">Back</string>
+    <string name="select_all">Select All</string>
+    <string name="more">More</string>
+    <string name="no_custom_substances_found">No custom substances found.</string>
+    <string name="article">Article</string>
+    <string name="info_is_not_approved">Info is not approved</string>
+    <string name="dosage">Dosage</string>
+    <string name="no_dosage_info">No dosage info</string>
+    <string name="bioavailability">Bioavailability: %1$s-%2$s%%</string>
+    <string name="volumetric_dosing">Volumetric dosing</string>
+    <string name="tolerance">Tolerance</string>
+    <string name="toxicity">Toxicity</string>
+    <string name="duration">Duration</string>
+    <string name="start_time">Start:</string>
+    <string name="no_duration_info">No duration info</string>
+    <string name="effects">Effects</string>
+    <string name="risks">Risks</string>
+    <string name="long_term">Long-term</string>
+    <string name="addiction_potential">Addiction potential</string>
+    <string name="safer_hallucinogen_use">Safer hallucinogen use</string>
+    <string name="see_also">See also</string>
+    <string name="safer_stimulant_use">Safer stimulant use</string>
+    <string name="no_matching_substance_with_the_tag_found">No matching substance with the tag \'%1$s\' found</string>
+    <string name="no_matching_substance_with_tags_found">No matching substance with tags \'%1$s\' found</string>
+    <string name="add_route_of_administration">Add Route of Administration</string>
+    <string name="route">Route</string>
+    <string name="routes_of_administration">Routes of Administration</string>
+    <string name="default_units">Default Units</string>
+    <string name="name">Name</string>
+    <string name="hide_dosage_dots_summary">Hides the small dots on the timeline graph.</string>
+    <string name="hide_timeline_summary">Hides the timeline graph on the experience detail screen.</string>
+    <string name="export_description_short">Save all your data to a JSON file.</string>
+    <string name="import_description_short">Import data from a previously exported JSON file.</string>
+    <string name="delete_everything_description_short">Permanently removes all your data. This cannot be undone.</string>
+    <string name="suggestions">Suggestions</string>
+    <string name="dose_is_known">Dose is known</string>
+    <string name="part_of_unknown_experience">Part of unknown experience</string>
+    <string name="add_ingestion_at_same_time">Add ingestion at same time</string>
+    <string name="custom">custom</string>
+    <string name="navigate_back">Navigate back</string>
+    <string name="dose_unknown">total dose unknown</string>
+    <string name="explain_timeline_title">Timeline info</string>
+
+    <string name="explain_timeline_assumptions_title">Simplifying/False assumptions</string>
+    <string name="explain_timeline_assumptions_intro_part1">To be able to draw the timeline with the given data multiple </string>
+    <string name="explain_timeline_assumptions_intro_part2_bold">often false</string>
+    <string name="explain_timeline_assumptions_intro_part3"> simplifying assumptions are made:</string>
+    <string-array name="explain_timeline_assumptions_bullets">
+        <item>Taking e.g. x amount now will give the same effect as taking x amount later. There is no immediate tolerance.</item>
+        <item>Taking twice the dose will give twice the effect.</item>
+        <item>Duration ranges from PsychonautWiki can be applied for all kinds of dosages.</item>
+        <item>Oral ingestions are always on an empty stomach and therefore not delayed (by up to 4 hours).</item>
+    </string-array>
+
+    <string name="explain_timeline_understanding_title">Understanding the timeline</string>
+    <string-array name="explain_timeline_understanding_bullets">
+        <item>The timeline is drawn based on the onset, comeup, peak and offset (and sometimes total) from PsychonautWiki.</item>
+        <item>In the ideal case all 4 durations (onset, comeup, peak and offset) are defined and the full timeline is drawn as averageOnset -> averageComeup -> weightedPeak -> weightedOffset, where \"weighted\" means that the given range has been linearly interpolated with the dose, so if a threshold dose was taken it takes the minimum of the range, if a heavy dose was taken it takes the max and for everything in between it linearly interpolates.</item>
+        <item>The timelines from ingestions with the same substance and administration route where substances have onset, comeup, peak and offset defined are combined into a cumulative timeline by simply putting the individual lines on top of each other. This is not done for ingestions where either the onset, comeup, peak or offset duration is missing.</item>
+        <item>Different administration routes are always drawn as separate timelines even if they are of the same substance. They also take the full height of the canvas, not the height that is proportional to the dose or effect.</item>
+        <item>If any of the 4 durations are missing but the total duration is given, then the first defined durations are drawn and as soon as a missing duration is encountered it uses the total to infer the end of the timeline and draws a dotted line to the end. If the total is not given it just stops drawing the line. So if there is no timeline or part of the timeline is missing that means that the duration is not defined in PsychonautWiki. If you add the missing durations in PsychonautWiki, the full timeline will be shown in the next update.</item>
+        <item>The vertical trajectory of dotted lines is unknown. So if you see a dotted line that means it is not known how the effect develops over that timeframe. The only thing that is known is where the line will end.</item>
+        <item>When a time range is given for the ingestion and all durations are defined for the route of administration then the app assumes the dosage was evenly consumed in that time frame and cumulates the curves of the infinitesimal ingestions using convolution.</item>
+    </string-array>
+
+    <string name="explain_timeline_pw_durations_title">PsychonautWiki durations</string>
+    <string name="explain_timeline_pw_durations_intro">Duration refers to the length of time over which the subjective effects of a psychoactive substance manifest themselves.\nDuration can be broken down into 6 parts: (1) total duration (2) onset (3) come up (4) peak (5) offset and (6) after effects. Depending upon the substance consumed, each of these occurs in a separate and continuous fashion.</string>
+    <string name="explain_timeline_pw_durations_total_title">Total</string>
+    <string name="explain_timeline_pw_durations_total_desc">The total duration of a substance can be defined as the amount of time it takes for the effects of a substance to completely wear off into sobriety, starting from the moment the substance is first administered.</string>
+    <string name="explain_timeline_pw_durations_onset_title">Onset</string>
+    <string name="explain_timeline_pw_durations_onset_desc">The onset phase can be defined as the period until the very first changes in perception (i.e. \"first alerts\") are able to be detected.</string>
+    <string name="explain_timeline_pw_durations_comeup_title">Come up</string>
+    <string name="explain_timeline_pw_durations_comeup_desc">The \"come up\" phase can be defined as the period between the first noticeable changes in perception and the point of highest subjective intensity. This is colloquially known as \"coming up.\"</string>
+    <string name="explain_timeline_pw_durations_peak_title">Peak</string>
+    <string name="explain_timeline_pw_durations_peak_desc">The peak phase can be defined as period of time in which the intensity of the substance\'s effects are at its height.</string>
+    <string name="explain_timeline_pw_durations_offset_title">Offset</string>
+    <string name="explain_timeline_pw_durations_offset_desc">The offset phase can be defined as the amount of time in between the conclusion of the peak and shifting into a sober state. This is colloquially referred to as \"coming down.\"</string>
+    <string name="explain_timeline_pw_durations_after_effects_title">After effects</string>
+    <string name="explain_timeline_pw_durations_after_effects_desc">The after effects can be defined as any residual effects which may remain after the experience has reached its conclusion. This is colloquially known as a \"hangover\" or an \"afterglow\" depending on the substance and usage.\nThe after effects are not included as part of the total duration.</string>
+
+    <string name="faq_title">FAQ</string>
+    <string name="faq_q1_info_source">Where does the information come from?</string>
+    <string name="faq_a1_info_source">Dosages, durations, interactions, tolerance, common names, psychoactive classes, toxicity and addiction potential come from PsychonautWiki. Substance summaries and additional categories come from Tripsit. Effects, dosage remarks, general &amp; long term risks and safer use come from the DIZ (drug information center of Zurich).</string>
+    <string name="faq_q2_interactions">When does the app detect interactions?</string>
+    <string name="faq_a2_interactions">If there is an interaction with a substance you ingested less than 2 days ago. It checks interaction both ways and checks if a substance is indirectly mentioned through its psychoactive class.</string>
+    <string name="faq_q3_changing_info">How can the information be changed or added?</string>
+    <string name="faq_a3_changing_info">Edit the article in PsychonautWiki so your edit might get approved by one of the PsychonautWiki moderators, especially if you can reference good sources. The changed information will come in the next update of the app. If the information to be changed comes from another source than PsychonautWiki contact support.</string>
+    <string name="faq_q4_timeline_independence">Why does the timeline treat every ingestion independently?</string>
+    <string name="faq_a4_timeline_independence">Because the information on tolerance and cross tolerance does not yet allow to do this reliably.</string>
+    <string name="faq_q5_dose_dots">What do the dots next to the dose of the ingestion mean?</string>
+    <string name="faq_a5_dose_dots">0 dots means that the dose is less than threshold, 1: light, 2: common, 3: strong, 4: heavy. More than 4 dots means that the heavy dose is subtracted and the remainder is again classified in terms of light, common and strong.</string>
+
+    <string name="description">Description</string>
+    <string name="add_route">Add Route</string>
+    <string name="remove_route">Remove Route</string>
+    <string name="dose_light">Light</string>
+    <string name="dose_common">Common</string>
+    <string name="dose_strong">Strong</string>
+    <string name="dose_heavy">Heavy</string>
+    <string name="duration_onset">Onset</string>
+    <string name="duration_comeup">Comeup</string>
+    <string name="duration_peak">Peak</string>
+    <string name="duration_offset">Offset</string>
+    <string name="duration_total">Total</string>
+    <string name="duration_afterglow">Afterglow</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
+    <string name="units_placeholder">Units</string>
+    <string name="disabled">disabled</string>
+
+    <string name="substance_unit_title">%1$s unit</string>
+    <string name="delete_custom_unit_cd">Delete custom unit</string>
+    <string name="delete_custom_unit_dialog_title">Delete custom unit?</string>
+    <string name="delete_custom_unit_dialog_text">This will affect all ingestions that are using it. Consider archiving it instead.</string>
+    <string name="ingestion_singular">ingestion</string>
+    <string name="ingestion_plural">ingestions</string>
+    <string name="ingestions_affected_by_edit">%1$s are affected by this edit</string>
+    <string name="no_ingestions_using_unit">No ingestions are using this unit yet</string>
+
+    <string name="cannabis_info_joint" formatted="false">When smoking a joint about 23%% of the THC in the bud is inhaled. So if you smoke a joint with 300mg of a bud that has 20%% THC then you inhale 300mg * 20/100 * 23/100 = 13.8mg THC.</string>
+    <string name="cannabis_info_bong" formatted="false">When smoking with a bong about 40%% of the THC in the bud is inhaled. So if you smoke 300mg of a bud that has 20%% THC then you inhale 300mg * 20/100 * 40/100 = 24mg THC.</string>
+    <string name="cannabis_info_vaporizer" formatted="false">When smoking with a vaporizer about 70%% of the THC in the bud is inhaled. So if you smoke 300mg of a bud that has 20%% THC then you inhale 300mg * 20/100 * 70/100 = 42mg THC.</string>
+    <string name="psilocybin_info_dried" formatted="false">Dried Psilocybe cubensis contain around 1%% of Psilocybin.</string>
+    <string name="psilocybin_info_fresh" formatted="false">Fresh Psilocybe cubensis contain around 0.1%% of Psilocybin.</string>
+    <string name="psilocybin_info_research">Research the strain of mushroom you have to be able to estimate the amount of Psilocybin it contains.</string>
+    <string name="alcohol_info">1 ml of Ethanol is 0.8g. So if you are e.g. consuming 200ml of a spirit with 40%% of Alcohol you are consuming 200ml * 40/100 * 0.8 = 64g Ethanol.</string>
+
+    <string name="prompt_cannabis_name" formatted="false">e.g. Joint weed 20%%, Bong weed 15%%, Vaporizer</string>
+    <string name="prompt_cannabis_unit">mg, joint, hit</string>
+    <string name="prompt_cannabis_unit_plural">mg, joints, hits</string>
+    <string name="prompt_mushrooms_name">Mushroom strain</string>
+    <string name="prompt_mushrooms_unit">g</string>
+    <string name="prompt_mushrooms_unit_plural">g</string>
+    <string name="prompt_alcohol_name">e.g. beer, wine, spirit</string>
+    <string name="prompt_alcohol_unit">e.g. ml, cup</string>
+    <string name="prompt_alcohol_unit_plural">ml, cups</string>
+    <string name="prompt_caffeine_name">e.g. coffee, tea, energy drink</string>
+    <string name="prompt_caffeine_unit">e.g. cup, can</string>
+    <string name="prompt_caffeine_unit_plural">cups, cans</string>
+    <string name="prompt_oral_name">e.g. Blue rocket, 85%% powder</string>
+    <string name="prompt_oral_unit">e.g. pill, capsule, mg</string>
+    <string name="prompt_oral_unit_plural">e.g. pills, capsules, mg</string>
+    <string name="prompt_smoked_name">e.g. 85%% powder</string>
+    <string name="prompt_smoked_unit">e.g. mg, hit</string>
+    <string name="prompt_smoked_unit_plural">e.g. mg, hits</string>
+    <string name="prompt_insufflated_name">e.g. Nasal solution, Blue dispenser</string>
+    <string name="prompt_insufflated_unit">e.g. spray, spoon, scoop, line</string>
+    <string name="prompt_insufflated_unit_plural">e.g. sprays, spoons, scoops, lines</string>
+    <string name="prompt_buccal_name">e.g. Brand name</string>
+    <string name="prompt_buccal_unit">e.g. pouch</string>
+    <string name="prompt_buccal_unit_plural">pouches</string>
+    <string name="prompt_transdermal_name">e.g. brand name</string>
+    <string name="prompt_transdermal_unit">e.g. patch</string>
+    <string name="prompt_transdermal_unit_plural">patches</string>
+    <string name="prompt_default_name">e.g. 85%% powder, blue rocket</string>
+    <string name="prompt_default_unit">e.g. pill, spray, spoon</string>
+    <string name="prompt_default_unit_plural">e.g. pills, sprays, spoons</string>
+
+    <string name="unit_singular">Unit singular</string>
+    <string name="unit_plural">Unit plural</string>
+    <string name="note">Note</string>
+    <string name="dose_per_unit">Dose per %1$s</string>
+    <string name="is_estimate_cd">Is an estimate</string>
+    <string name="estimated_standard_deviation_per_unit">Estimated standard deviation per %1$s</string>
+    <string name="ingestion_sample_preview">Ingestion sample preview:</string>
+    <string name="archive_this_unit_cd">Archive this unit</string>
+    <string name="archive">Archive</string>
+    <string name="unarchive">Unarchive</string>
+    <string name="archive_description">Archived custom units don\'t show up when adding ingestions</string>
+
+    <string name="done_cd">Done</string>
+
+    <string-array name="cannabis_info">
+        <item>Joint: 0.2-1g</item>
+        <item>Bong: 0.1-0.5g</item>
+        <item>Vaporizer: 0.1-0.3g</item>
+    </string-array>
+    <string-array name="psilocybin_info">
+        <item>The dosages refer to dried psilocybin mushrooms.</item>
+        <item>Fresh mushrooms are about 90%% water, so the dose is 10x higher.</item>
+        <item>Research suggests that 1%% of the dried weight is psilocybin.</item>
+    </string-array>
+    <string-array name="alcohol_info">
+        <item>1 standard unit in the US is 14g, in the UK 8g of alcohol.</item>
+    </string-array>
+    <string name="unit">unit</string>
+    <string name="edit_custom_unit">Edit custom unit</string>
+    <string name="archive_title">Archive</string>
+    <string name="clear_search">Clear search</string>
+    <string name="already_used">Already used</string>
+    <string name="other_colors">Other colors</string>
+    <string name="add_custom_color">Add custom color</string>
+    <string name="select_color">Select color</string>
+    <string name="ok">OK</string>
+    <string name="custom_recipes">Custom Recipes</string>
+    <string name="add_custom_recipe">Add custom recipe</string>
+    <string name="edit_custom_recipe">Edit custom recipe</string>
+    <string name="recipe_name">Recipe name</string>
+    <string name="recipe_name_hint">Enter recipe name</string>
+    <string name="subcomponents">Subcomponents</string>
+    <string name="add_subcomponent">Add subcomponent</string>
+    <string name="substance_name">Substance name</string>
+    <string name="substance_name_hint">Enter substance name</string>
+    <string name="dose_per_unit_hint">Enter dose</string>
+    <string name="estimated_dose_standard_deviation">Estimated dose standard deviation</string>
+    <string name="estimated_dose_standard_deviation_hint">Enter standard deviation</string>
+    <string name="is_estimate">Is estimate</string>
+    <string name="original_unit">Original unit</string>
+    <string name="original_unit_hint">mg, g, ml, etc.</string>
+    <string name="no_custom_recipes_yet">No custom recipes yet</string>
+    <string name="no_custom_recipes_description">Create custom recipes to combine multiple substances into a single unit.</string>
+    <string name="no_custom_recipes_found">No custom recipes found</string>
+    <string name="no_custom_recipes_found_description">Try adjusting your search terms.</string>
+    <string name="delete_subcomponent">Delete subcomponent</string>
+    <string name="recipe_unit">Recipe unit</string>
+    <string name="recipe_unit_hint">capsule, tablet, etc.</string>
+    <string name="recipe_unit_plural">Recipe unit plural</string>
+    <string name="recipe_unit_plural_hint">capsules, tablets, etc.</string>
+    <string name="recipe_note">Recipe note</string>
+    <string name="recipe_note_hint">Optional note about this recipe</string>
+    <string name="save_recipe">Save recipe</string>
+    <string name="recipe_saved">Recipe saved</string>
+    <string name="recipe_deleted">Recipe deleted</string>
+    <string name="delete_recipe">Delete recipe</string>
+    <string name="delete_recipe_confirmation">Are you sure you want to delete this recipe?</string>
+    <string name="recipe_contains">Contains: %1$s</string>
+    <string name="choose_recipe">Choose recipe</string>
+    <string name="recipe_dose">Recipe dose</string>
+    <string name="units_of_recipe">units of %1$s</string>
+    <string name="notes_placeholder">Optional notes</string>
+    <string name="administration_route">Administration route</string>
+    <string name="recipe_not_found">Recipe not found</string>
+    <string name="recipe">Recipe</string>
+    <string name="collapse">Collapse</string>
+    <string name="expand">Expand</string>
+    <string name="edit_ingestion">Edit ingestion</string>
+    <string name="add_content_description">Add</string>
+
+    <string name="delete_ingestion_dialog_title">Delete ingestion?</string>
+    <string name="delete_ingestion_content_description">Delete ingestion</string>
+    <string name="done_icon_content_description">Done icon</string>
+    <string name="dose_with_unit_name">Dose %1$s</string>
+    <string name="unit_display">Unit: %1$s</string>
+    <string name="default_unit">Default</string>
+    <string name="ingestion_notes">Ingestion notes</string>
+    <string name="consumer_icon_content_description">Consumer</string>
+
+    <string name="file_not_found">File not found</string>
+    <string name="import_successful">Import successful</string>
+    <string name="decoding_file_failed">Decoding file failed</string>
+    <string name="export_successful">Export successful</string>
+    <string name="export_failed">Export failed</string>
+    <string name="custom_recipe_archive_title">Custom recipe archive</string>
+    <string name="no_archived_recipes_yet">No archived recipes yet</string>
+    <string name="no_archived_recipes_description">Archived recipes don\'t show up when adding ingestions</string>
+
+    <string name="search_multiple_substances">Search multiple substances</string>
+    <string name="add_substance_to_search">Add substance to search</string>
+    <string name="remove_substance_from_search">Remove substance from search</string>
+    <string name="searching_for_substances">Searching for: %1$s</string>
+    <string name="no_experiences_with_combination">No experiences found with this substance combination</string>
+    <string name="substance_combination_search">Substance combination</string>
+
+    <string name="search_in_timed_notes">Search in timed notes</string>
+    <string name="no_matching_timed_notes">No timed notes match your search</string>
+    <string name="timed_note_contains">Timed note contains: %1$s</string>
+
+    <string name="add_photo">Add photo</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_photo">Choose from gallery</string>
+    <string name="photo">Photo</string>
+    <string name="photos">Photos</string>
+    <string name="delete_photo">Delete photo</string>
+    <string name="delete_photo_confirmation">Are you sure you want to delete this photo?</string>
+    <string name="photo_deleted">Photo deleted</string>
+    <string name="view_photo">View photo</string>
+    <string name="no_photos_yet">No photos yet</string>
+    <string name="photo_added">Photo added</string>
+    <string name="camera_permission_required">Camera permission required</string>
+    <string name="storage_permission_required">Storage permission required</string>
+    <string name="grant_permission">Grant permission</string>
+
+    <string name="notification_permission_required">Notification permission required</string>
+    <string name="notification_permission_rationale">Allow notifications to receive reminders for ingestions</string>
+    <string name="camera_permission_rationale">Allow camera access to take photos for timed notes</string>
+    <string name="storage_permission_rationale">Allow storage access to select photos from gallery</string>
+
+    <string name="type_your_note">Type your note</string>
+    <string name="send_note">Send note</string>
+
+    <string name="notification_channel_name">Journal notifications</string>
+
+    <string name="ingestion_reminders">Ingestion reminders</string>
+    <string name="add_reminder">Add reminder</string>
+    <string name="edit_reminder">Edit reminder</string>
+    <string name="delete_reminder">Delete reminder</string>
+    <string name="delete_reminder_confirmation">Are you sure you want to delete this reminder?</string>
+    <string name="no_reminders_yet">No reminders yet</string>
+    <string name="no_reminders_description">Add reminders for your medication or supplements</string>
+    <string name="reminder_repeat_daily">Daily</string>
+    <string name="reminder_repeat_weekly">Weekly</string>
+    <string name="reminder_repeat_custom">Custom</string>
+    <string name="reminder_notification_title">Ingestion reminder</string>
+    <string name="reminder_repeat_once">Once</string>
+    <string name="dose_optional">Dose (Optional)</string>
+    <string name="note_optional">Note (Optional)</string>
+    <string name="update_reminder">Update Reminder</string>
+    <string name="create_reminder">Create Reminder</string>
+    <string name="reminder_time">Reminder Time</string>
+    <string name="repeat_mode">Repeat Mode</string>
+    <string name="enable_reminder">Enable Reminder</string>
+    <string name="select_time">Select Time</string>
+    <string name="select_repeat_mode">Select Repeat Mode</string>
+    <string name="error">Error</string>
+    <string name="saving">Saving...</string>
+    <string name="reminder_notification_text">Time to take %1$s (%2$s)</string>
+    <string name="mark_as_taken">Mark as taken</string>
+    <string name="snooze_reminder">Snooze</string>
+    <string name="skip_reminder">Skip</string>
+    <string name="reminder_marked_taken">Marked as taken</string>
+    <string name="reminder_snoozed">Reminder snoozed for 15 minutes</string>
+    <string name="reminder_skipped">Reminder skipped</string>
+
+    <string name="view_chat_notes">View chat-style notes</string>
+    <string name="chat_style_notes">Chat-style notes</string>
+    <string name="select_photo_source">Select photo source</string>
+    <string name="choose_from_gallery">Choose from gallery</string>
+
+    <string name="search_notes">Search notes</string>
+    <string name="search_in_notes">Search in notes</string>
+    <string name="no_notes_match_search">No notes match your search</string>
+    <string name="notes_found">%1$d note(s) found</string>
+
+    <string name="photo_removed">Photo removed</string>
+    <string name="remove_photo">Remove photo</string>
+    <string name="photo_count">%1$d photo(s)</string>
+    <string name="select_photos">Select photos</string>
+    <string name="max_photos_reached">Maximum number of photos reached</string>
+
+    <string name="reminder_details">Reminder details</string>
+    <string name="select_substance">Select substance</string>
+    <string name="substance_required">Substance is required</string>
+    <string name="select_roa">Select route of administration</string>
+    <string name="roa_required">Route of administration is required</string>
+    <string name="enter_dose">Enter dose</string>
+    <string name="dose_required">Dose is required</string>
+    <string name="dose_must_be_positive">Dose must be greater than 0</string>
+    <string name="select_unit">Select unit</string>
+    <string name="unit_required">Unit is required</string>
+    <string name="repeat_mode_title">Repeat mode</string>
+    <string name="select_repeat_mode_action">Select repeat mode</string>
+    <string name="repeat_none">Does not repeat</string>
+    <string name="repeat_every_day">Every day</string>
+    <string name="repeat_every_week">Every week</string>
+    <string name="repeat_custom_days">Custom days</string>
+    <string name="select_days">Select days</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="at_least_one_day_required">Select at least one day</string>
+    <string name="reminder_enabled">Reminder enabled</string>
+    <string name="reminder_disabled">Reminder disabled</string>
+    <string name="disable_reminder">Disable reminder</string>
+
+    <string name="substance_picker">Substance picker</string>
+    <string name="search_substance">Search substance</string>
+    <string name="no_substance_selected">No substance selected</string>
+    <string name="custom_substance">Custom substance</string>
+    <string name="psychonautwiki_substance">PsychonautWiki substance</string>
+
+    <string name="time_picker">Time picker</string>
+    <string name="select_date">Select date</string>
+    <string name="select_hour">Select hour</string>
+    <string name="select_minute">Select minute</string>
+    <string name="date_and_time">Date and time</string>
+
+    <string name="dose_input">Dose input</string>
+    <string name="enter_dose_value">Enter dose value</string>
+    <string name="dose_unit">Dose unit</string>
+
+    <string name="field_required">This field is required</string>
+    <string name="invalid_value">Invalid value</string>
+    <string name="value_must_be_positive">Value must be greater than 0</string>
+    <string name="value_too_large">Value is too large</string>
+    <string name="value_too_small">Value is too small</string>
+
+    <string name="reminder_created">Reminder created</string>
+    <string name="reminder_updated">Reminder updated</string>
+    <string name="reminder_deleted">Reminder deleted</string>
+    <string name="changes_saved">Changes saved</string>
+
+    <string name="error_creating_reminder">Error creating reminder</string>
+    <string name="error_updating_reminder">Error updating reminder</string>
+    <string name="error_deleting_reminder">Error deleting reminder</string>
+    <string name="error_loading_data">Error loading data</string>
+    <string name="error_saving_photo">Error saving photo</string>
+    <string name="error_loading_photo">Error loading photo</string>
+
+    <string name="discard_changes">Discard changes?</string>
+    <string name="discard_changes_message">You have unsaved changes. Are you sure you want to discard them?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep editing</string>
+    <string name="delete_photo_message">This action cannot be undone.</string>
+
+    <string name="save">Save</string>
+    <string name="confirm">Confirm</string>
+    <string name="apply">Apply</string>
+    <string name="clear">Clear</string>
+    <string name="reset">Reset</string>
+    <string name="deselect_all">Deselect all</string>
+</resources>

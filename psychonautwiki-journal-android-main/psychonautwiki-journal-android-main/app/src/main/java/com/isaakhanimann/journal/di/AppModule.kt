@@ -1,0 +1,89 @@
+/*
+ * Copyright (c) 2022. Isaak Hanimann.
+ * This file is part of PsychonautWiki Journal.
+ *
+ * PsychonautWiki Journal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at
+ * your option) any later version.
+ *
+ * PsychonautWiki Journal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with PsychonautWiki Journal.  If not, see https://www.gnu.org/licenses/gpl-3.0.en.html.
+ */
+
+package com.isaakhanimann.journal.di
+
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.preferencesDataStoreFile
+import androidx.room.Room
+import com.isaakhanimann.journal.data.room.AppDatabase
+import com.isaakhanimann.journal.data.room.AppDatabase.Companion.MIGRATION_10_11
+import com.isaakhanimann.journal.data.room.AppDatabase.Companion.MIGRATION_11_12
+import com.isaakhanimann.journal.data.room.AppDatabase.Companion.MIGRATION_12_13
+import com.isaakhanimann.journal.data.room.AppDatabase.Companion.MIGRATION_13_14
+import com.isaakhanimann.journal.data.room.AppDatabase.Companion.MIGRATION_14_15
+import com.isaakhanimann.journal.data.room.AppDatabase.Companion.MIGRATION_15_16
+import com.isaakhanimann.journal.data.room.AppDatabase.Companion.MIGRATION_16_17
+import com.isaakhanimann.journal.data.room.AppDatabase.Companion.MIGRATION_17_18
+import com.isaakhanimann.journal.data.room.AppDatabase.Companion.MIGRATION_7_8
+import com.isaakhanimann.journal.data.room.AppDatabase.Companion.MIGRATION_8_9
+import com.isaakhanimann.journal.data.room.AppDatabase.Companion.MIGRATION_9_10
+import com.isaakhanimann.journal.data.room.experiences.ExperienceDao
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
+
+    @Singleton
+    @Provides
+    fun provideExperiencesDao(appDatabase: AppDatabase): ExperienceDao =
+        appDatabase.experienceDao()
+
+    @Singleton
+    @Provides
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =
+        Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "experiences_db"
+        ).addMigrations(
+            MIGRATION_7_8,
+            MIGRATION_8_9,
+            MIGRATION_9_10,
+            MIGRATION_10_11,
+            MIGRATION_11_12,
+            MIGRATION_12_13,
+            MIGRATION_13_14,
+            MIGRATION_14_15,
+            MIGRATION_15_16,
+            MIGRATION_16_17,
+            MIGRATION_17_18
+        ).build()
+
+    @Singleton
+    @Provides
+    fun providePreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler(
+                produceNewData = { emptyPreferences() }
+            ),
+            produceFile = { appContext.preferencesDataStoreFile("user_preferences") }
+        )
+    }
+}
