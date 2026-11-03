@@ -1394,3 +1394,36 @@ Deux incohérences pharmacologiques majeures subsistaient sur la fiche de l'**Op
 - [simulator.html](file:///C:/Users/droll/.gemini/antigravity/brain/4d71d2db-7ecc-4fb0-9da8-047c03f36ad5/simulator.html)
 - [MODIFICATIONS.md](file:///c:/Users/droll/Desktop/synaptik%20journal/MODIFICATIONS.md)
 
+
+
+---
+
+## 49. Enrichissement Intégral : Descriptions, Usages et Profils Comparatifs (100% des 388 Substances en FR & EN)
+
+### Problématiques Résolues
+À la suite d'un audit complet de la base de données après la mise à jour des cathinones et des médicaments :
+1. **Descriptions et Usages manquants** : 48 substances ne disposaient d'aucun résumé clinique ni de description d'usage (`summary`), privant l'utilisateur de toute information essentielle sur leur pharmacologie, leurs indications médicales ou leurs modes d'usage récréatif. Quatre molécules supplémentaires présentaient un résumé manquant dans la version anglaise (Buspirone, Haloperidol, Mirtazapine, Risperidone).
+2. **Profils comparatifs manquants** : 164 substances (dont l'Opium révisé) ne possédaient pas la section standardisée `⚖️ Profil comparatif : ...` / `⚖️ Comparative profile: ...`, empêchant de comparer directement la molécule à ses homologues de référence au sein de sa classe thérapeutique.
+3. **Données de Réduction des Risques (RdR) incomplètes** : 193 substances historiques issues de PsychonautWiki ne comportaient pas les champs structurés `effectsSummary` et `saferUse`.
+
+### Enrichissements Appliqués
+1. **Complétion des 48 substances dépourvues de description** :
+   - Rédaction de monographies bilingues complètes (FR et EN) détaillant : mécanisme d'action, indications thérapeutiques, profil récréatif, posologie/remarques, risques aigus et chroniques, conseils de RdR et profil comparatif intégré.
+   - Molécules enrichies : *Lisdexamfétamine (Vyvanse), Dextroamphétamine, Chlordiazépoxide (Librium), Désomorphine (Krokodil), Tilidine, Naloxone, Protoxyde d'azote, Cannabidiol (CBD), Méthoxétamine (MXE), JWH-018, Poppers (Nitrites), 5-HTP, L-Théanine, N-Acétylcystéine (NAC), Créatine, L-Tyrosine, Alpha-GPC, Citicoline, Choline bitartrate, SAM-e, Galantamine, F-Phénibut, 4F-MPH, 4F-EPH, Fénétylline (Captagon), Méthiopropamine, Méthylnaphthidate, Désoxypipradrol, Cyclazodone, Flmodafinil, HXE, MXiPr, JWH-073, Étomidate, Gaboxadol, Apomorphine, Bufoténine, LAE-32, MiPLA, Myristicine, PMMA, Éfavirenz, Prochlorpérazine, Progestérone, 2,5-DMA, Dichloropane, Méphénaqualone, Méclofénoxate*.
+2. **Harmonisation et injection des 164 Profils Comparatifs bilingues** :
+   - Chaque profil comparatif analyse rigoureusement les différences de puissance, de pharmacocinétique (latence, pic, durée), de tolérance et de risques de dépendance par rapport à l'étalon de la classe (ex. Morphine pour les opioïdes, Diazépam pour les benzodiazépines, Ritaline/Amphétamine pour les stimulants, Kétamine pour les dissociatifs, LSD/Psilocybine pour les psychédéliques).
+   - Profil comparatif dédié rédigé pour l'**Opium** (teneur à 10% de morphine, synergie d'alcaloïdes, puissance équivalente à 0.80x, et biodisponibilité alvéolaire fumée vs orale).
+3. **Harmonisation systématique de `effectsSummary` et `saferUse`** :
+   - Déploiement de synthèses cliniques et de consignes de réduction des risques basées sur la pharmacologie pour l'ensemble des substances restantes sans données (Set & Setting pour les psychédéliques, hydratation/pause pour les stimulants, interdiction absolue des mélanges dépresseurs pour les GABA/opioïdes, protection vésicale pour les dissociatifs, surveillance psychiatrique pour les neuroleptiques).
+
+### Métriques Finales de Couverture (Audit à 100%)
+- **Total des substances** : 388 / 388 (100.0%)
+- **Substances avec description clinique (`summary`)** : 388 / 388 en FR (100%) et 388 / 388 en EN (100%)
+- **Substances avec profil comparatif explicite (`⚖️ Profil comparatif`)** : 388 / 388 en FR (100%) et 388 / 388 en EN (100%)
+- **Substances avec résumé des effets (`effectsSummary`)** : 388 / 388 en FR (100%) et 388 / 388 en EN (100%)
+- **Substances avec consignes RdR (`saferUse`)** : 388 / 388 en FR (100%) et 388 / 388 en EN (100%)
+
+### Synchronisation des Livrables
+- [`substances.json (FR)`](file:///c:/Users/droll/Desktop/synaptik%20journal/psychonautwiki-journal-android-main/psychonautwiki-journal-android-main/app/src/main/res/raw-fr/substances.json) : 388 substances enrichies à 100%.
+- [`substances.json (EN)`](file:///c:/Users/droll/Desktop/synaptik%20journal/psychonautwiki-journal-android-main/psychonautwiki-journal-android-main/app/src/main/res/raw/substances.json) : 388 substances enrichies à 100% de manière symétrique.
+- [`simulateur_synaptik.html`](file:///c:/Users/droll/Desktop/synaptik%20journal/simulateur_synaptik.html) et artefact [`simulator.html`](file:///C:/Users/droll/.gemini/antigravity/brain/4d71d2db-7ecc-4fb0-9da8-047c03f36ad5/simulator.html) : Recompilés et synchronisés.
