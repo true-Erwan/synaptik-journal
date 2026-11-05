@@ -1,0 +1,120 @@
+{
+  "Paracetamol": {
+    "oral": {
+      "low": 500,
+      "standard": 1000,
+      "max": 1000,
+      "units": "mg"
+    },
+    "rectal": {
+      "low": 500,
+      "standard": 1000,
+      "max": 1000,
+      "units": "mg"
+    },
+    "intravenous": {
+      "low": 500,
+      "standard": 1000,
+      "max": 1000,
+      "units": "mg"
+    }
+  },
+  "Ibuprofen": {
+    "oral": {
+      "low": 200,
+      "standard": 400,
+      "max": 600,
+      "units": "mg"
+    }
+  },
+  "Ketoprofen": {
+    "oral": {
+      "low": 50,
+      "standard": 100,
+      "max": 100,
+      "units": "mg"
+    },
+    "intravenous": {
+      "low": 50,
+      "standard": 100,
+      "max": 100,
+      "units": "mg"
+    }
+  },
+  "Phloroglucinol": {
+    "oral": {
+      "low": 80,
+      "standard": 80,
+      "max": 160,
+      "units": "mg"
+    },
+    "intravenous": {
+      "low": 40,
+      "standard": 40,
+      "max": 80,
+      "units": "mg"
+    }
+  },
+  "Aspirin": {
+    "oral": {
+      "low": 500,
+      "standard": 1000,
+      "max": 1000,
+      "units": "mg"
+    }
+  },
+  "Naproxen": {
+    "oral": {
+      "low": 250,
+      "standard": 500,
+      "max": 500,
+      "units": "mg"
+    }
+  },
+  "Nefopam": {
+    "oral": {
+      "low": 30,
+      "standard": 30,
+      "max": 60,
+      "units": "mg"
+    },
+    "intravenous": {
+      "low": 10,
+      "standard": 20,
+      "max": 20,
+      "units": "mg"
+    }
+  },
+  "Metamizole": {
+    "oral": {
+      "low": 500,
+      "standard": 500,
+      "max": 1000,
+      "units": "mg"
+    }
+  },
+  "Diclofenac": {
+    "oral": {
+      "low": 25,
+      "standard": 50,
+      "max": 75,
+      "units": "mg"
+    }
+  },
+  "Propranolol": {
+    "oral": {
+      "low": 10,
+      "standard": 40,
+      "max": 80,
+      "units": "mg"
+    }
+  },
+  "Prednisolone": {
+    "oral": {
+      "low": 10,
+      "standard": 20,
+      "max": 40,
+      "units": "mg"
+    }
+  }
+}
