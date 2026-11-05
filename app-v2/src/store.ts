@@ -42,12 +42,6 @@ function uid(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
-function todayAt(h: number, m: number): number {
-  const d = new Date();
-  d.setHours(h, m, 0, 0);
-  return d.getTime();
-}
-
 export const useStore = create<AppState>()(
   persist(
     (set) => ({
@@ -75,7 +69,12 @@ export const useStore = create<AppState>()(
             : [...s.riskFactors, key],
         })),
 
-      // Demo profile "Léa": a daily Sertraline treatment + an ibuprofen taken today.
+      // Demo profile "Léa": a daily Sertraline treatment + Paracetamol taken today.
+      // Paracetamol is used (rather than Ibuprofen) so the home card can honestly
+      // read "Aucun mélange à risque": Sertraline + NSAID is a real caution
+      // (bleeding risk), while Sertraline + Paracetamol is not. Paracetamol still
+      // has a 4h minimum delay, so the "next dose possible" row is shown.
+      // Adding Tramadol then escalates to the high-risk alert with Sertraline.
       loadDemo: () =>
         set(() => ({
           name: 'Léa',
@@ -84,7 +83,9 @@ export const useStore = create<AppState>()(
             { id: uid(), substanceName: 'Sertraline', route: 'oral', dose: 50, unit: 'mg', hour: 8, minute: 0 },
           ],
           ingestions: [
-            { id: uid(), substanceName: 'Ibuprofen', route: 'oral', dose: 400, unit: 'mg', time: todayAt(12, 10) },
+            // Taken ~90 min ago so it's reliably still "active" whenever the
+            // demo is loaded, with a visible next-dose-possible time.
+            { id: uid(), substanceName: 'Paracetamol', route: 'oral', dose: 1000, unit: 'mg', time: Date.now() - 90 * 60_000 },
           ],
         })),
 
