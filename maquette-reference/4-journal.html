@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Synaptik — Journal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+a{color:#1E2A5A;text-decoration:none}a:hover{color:#0F1735}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F2F2F7; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif; color: #1C1C1E; display: flex; flex-direction: column; overflow: hidden">
+  <div style="padding: 64px 20px 0 20px; display: flex; flex-direction: column; gap: 4px">
+    <div style="font-size: 15px; color: #5E5E66; font-weight: 500">Aujourd'hui, 15:00</div>
+    <h1 style="margin: 0; font-size: 34px; font-weight: 700; letter-spacing: -0.5px">Journal</h1>
+  </div>
+
+  <div style="margin: 18px 16px 0 16px; padding: 16px; border-radius: 22px; background: #FFFFFF; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <div style="font-size: 17px; font-weight: 600">Effet dans le temps</div>
+      <div style="font-size: 13px; color: #5E5E66">Pincer pour zoomer</div>
+    </div>
+    <svg width="326" height="176" viewBox="0 0 326 176" role="img" aria-label="Courbe d'effet : ibuprofène pris à 12 h 10, effet maximal vers 13 h 30, fin vers 18 h ; sertraline à niveau stable">
+      <g stroke="#E5E5EA" stroke-width="1">
+        <line x1="0" y1="20" x2="0" y2="140"></line>
+        <line x1="54.3" y1="20" x2="54.3" y2="140"></line>
+        <line x1="108.7" y1="20" x2="108.7" y2="140"></line>
+        <line x1="163" y1="20" x2="163" y2="140"></line>
+        <line x1="217.3" y1="20" x2="217.3" y2="140"></line>
+        <line x1="271.7" y1="20" x2="271.7" y2="140"></line>
+        <line x1="325" y1="20" x2="325" y2="140"></line>
+      </g>
+      <line x1="0" y1="140" x2="326" y2="140" stroke="#AEAEB2" stroke-width="1"></line>
+      <line x1="0" y1="108" x2="326" y2="108" stroke="#1E2A5A" stroke-width="3" stroke-linecap="round" opacity="0.55"></line>
+      <path d="M111.7 140 C 121 140, 125 30, 135.8 30 C 160 30, 186 122, 217.3 140 Z" fill="#2BB6A8" fill-opacity="0.28"></path>
+      <path d="M111.7 140 C 121 140, 125 30, 135.8 30 C 160 30, 186 122, 217.3 140" fill="none" stroke="#147A70" stroke-width="2.5"></path>
+      <line x1="163" y1="12" x2="163" y2="140" stroke="#1C1C1E" stroke-width="1.5" stroke-dasharray="3 3"></line>
+      <text x="166" y="14" font-size="11" fill="#1C1C1E" font-weight="600">maintenant</text>
+      <circle cx="220.4" cy="140" r="5" fill="#F2994A"></circle>
+      <g font-size="11" fill="#5E5E66">
+        <text x="0" y="158">06</text>
+        <text x="48" y="158">09</text>
+        <text x="102" y="158">12</text>
+        <text x="157" y="158">15</text>
+        <text x="211" y="158">18</text>
+        <text x="265" y="158">21</text>
+        <text x="312" y="158">24</text>
+      </g>
+    </svg>
+    <div style="display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: #3A3A40">
+      <div style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 4px; border-radius: 2px; background: #147A70; display: inline-block"></span>Ibuprofène</div>
+      <div style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 4px; border-radius: 2px; background: #1E2A5A; opacity: 0.55; display: inline-block"></span>Sertraline (stable)</div>
+      <div style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 5px; background: #F2994A; display: inline-block"></span>Prochaine prise possible</div>
+    </div>
+  </div>
+
+  <div style="padding: 22px 20px 8px 20px; font-size: 20px; font-weight: 700">Historique</div>
+  <div style="margin: 0 16px; background: #FFFFFF; border-radius: 18px; display: flex; flex-direction: column">
+    <div style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #E5E5EA">
+      <div style="width: 52px; font-size: 15px; font-weight: 600; color: #1E2A5A">12:10</div>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+        <div style="font-size: 16px; font-weight: 600">Ibuprofène 400 mg</div>
+        <div style="font-size: 13px; color: #5E5E66">Effet maximal vers 13:30 · fin vers 18:00</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px; padding: 14px 16px">
+      <div style="width: 52px; font-size: 15px; font-weight: 600; color: #1E2A5A">08:00</div>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+        <div style="font-size: 16px; font-weight: 600">Sertraline 50 mg</div>
+        <div style="font-size: 13px; color: #5E5E66">Traitement de fond · 214 jours d'affilée</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: auto; height: 84px; box-sizing: border-box; padding: 8px 12px 24px 12px; background: #FFFFFF; border-top: 1px solid #E5E5EA; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+    <a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #6C6C72; font-size: 11px; font-weight: 500">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6C6C72" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-5H9v5H5a1 1 0 0 1-1-1z"></path></svg>
+      Aujourd'hui
+    </a>
+    <a href="Journal.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #1E2A5A; font-size: 11px; font-weight: 600">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1E2A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17c3-8 5-8 7-3s4 5 7-6l4 9"></path></svg>
+      Journal
+    </a>
+    <a href="Fiche.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #6C6C72; font-size: 11px; font-weight: 500">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6C6C72" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-4.5-4.5"></path></svg>
+      Substances
+    </a>
+    <a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 3px; color: #6C6C72; font-size: 11px; font-weight: 500">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6C6C72" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
+      Profil
+    </a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
