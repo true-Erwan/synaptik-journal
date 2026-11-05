@@ -1,0 +1,5 @@
+# Scratch & Temporary files
+scratch/
+__pycache__/
+*.pyc
+.system_generated/
