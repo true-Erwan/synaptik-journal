@@ -1,7 +1,7 @@
 // Derived view-model for the Today screen: which intakes are still active,
 // their status (taken / wait), and the next-dose-possible time.
 import type { Ingestion, Lang } from './types';
-import { getSubstanceByName } from './data';
+import { getSubstanceByName, displayName } from './data';
 import { buildCurve } from './effectCurve';
 import { getNextDoseTime, isDivertible } from './dosing';
 import { checkMix } from './interactions';
@@ -16,8 +16,55 @@ export interface IntakeStatus {
 }
 
 export function localizedName(name: string, lang: Lang): string {
-  const s = getSubstanceByName(name, lang);
-  return s?.name || name;
+  return displayName(name, lang);
+}
+
+// A recurring treatment, materialized as a concrete intake for the current day.
+export interface TreatmentLike {
+  id: string;
+  substanceName: string;
+  route: string;
+  dose: number | null;
+  unit: string;
+  hour: number;
+  minute: number;
+}
+
+/**
+ * Build the effective list of today's intakes: recurring daily treatments
+ * (materialized at their time today) + the real logged ingestions.
+ * Treatments get a stable virtual id so they can be rendered but not deleted
+ * like one-off intakes.
+ */
+export function buildTodayIngestions(
+  ingestions: Ingestion[],
+  treatments: TreatmentLike[],
+  now = Date.now(),
+): Ingestion[] {
+  const start = new Date(now);
+  start.setHours(0, 0, 0, 0);
+  const dayStart = start.getTime();
+  const dayEnd = dayStart + 24 * 3600_000;
+
+  const virtual: Ingestion[] = treatments.map((t) => {
+    const d = new Date(dayStart);
+    d.setHours(t.hour, t.minute, 0, 0);
+    return {
+      id: `treatment:${t.id}`,
+      substanceName: t.substanceName,
+      route: t.route,
+      dose: t.dose,
+      unit: t.unit,
+      time: d.getTime(),
+    };
+  });
+
+  const todays = ingestions.filter((i) => i.time >= dayStart && i.time < dayEnd);
+  return [...virtual, ...todays];
+}
+
+export function isTreatmentId(id: string): boolean {
+  return id.startsWith('treatment:');
 }
 
 export function getIntakeStatuses(
@@ -27,7 +74,7 @@ export function getIntakeStatuses(
 ): IntakeStatus[] {
   return ingestions
     .slice()
-    .sort((a, b) => b.time - a.time)
+    .sort((a, b) => a.time - b.time) // chronological: earliest first
     .map((ing) => {
       const s = getSubstanceByName(ing.substanceName, lang);
       const color = s?.color || '#1E2A5A';

@@ -64,3 +64,27 @@ export function normalize(str: string): string {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[\s-]/g, '');
 }
+
+// The dataset keeps `name` in English for both languages, but the FR entry's
+// commonNames contain the localized (accented/translated) form, e.g.
+// "Ibuprofen" -> "Ibuprofène", "Paracetamol" -> "Paracétamol".
+// For display in FR we pick the common name whose accent-stripped form matches
+// the English name; otherwise we keep the English name.
+const displayCache = new Map<string, string>();
+
+export function displayName(name: string, lang: Lang): string {
+  if (lang === 'en') return name;
+  const cacheKey = `${lang}:${name}`;
+  const cached = displayCache.get(cacheKey);
+  if (cached) return cached;
+  const s = byNameByLang.fr.get(name);
+  let result = name;
+  if (s && s.commonNames && s.commonNames.length) {
+    const target = normalize(name);
+    // Prefer an exact accent-insensitive match (the French spelling of the same word).
+    const match = s.commonNames.find((c) => normalize(c) === target && c !== name);
+    if (match) result = match;
+  }
+  displayCache.set(cacheKey, result);
+  return result;
+}

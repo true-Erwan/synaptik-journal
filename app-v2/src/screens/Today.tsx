@@ -3,37 +3,22 @@ import type { T } from '../i18n';
 import { formatLongDate, formatTime } from '../ui/format';
 import LangToggle from '../ui/LangToggle';
 import { CheckIcon, PillIcon, ClockIcon, PlusIcon, WarningIcon } from '../ui/icons';
-import { getIntakeStatuses, getTodaySummary } from '../logic/today';
+import { getIntakeStatuses, getTodaySummary, buildTodayIngestions, isTreatmentId } from '../logic/today';
 
 export default function Today({ t, onAdd }: { t: T; onAdd: () => void }) {
   const lang = useStore((s) => s.lang);
   const name = useStore((s) => s.name);
   const ingestions = useStore((s) => s.ingestions);
+  const treatments = useStore((s) => s.treatments);
   const riskFactors = useStore((s) => s.riskFactors);
-  const addIngestion = useStore((s) => s.addIngestion);
   const now = Date.now();
 
-  // Demo seed (shown only while the journal is empty) so the layout can be
-  // reviewed before the "Add" screen exists. Matches the maquette example.
-  const seedDemo = () => {
-    const todayAt = (h: number, m: number) => {
-      const d = new Date();
-      d.setHours(h, m, 0, 0);
-      return d.getTime();
-    };
-    addIngestion({ substanceName: 'Sertraline', route: 'oral', dose: 50, unit: 'mg', time: todayAt(8, 0) });
-    addIngestion({ substanceName: 'Ibuprofen', route: 'oral', dose: 400, unit: 'mg', time: todayAt(12, 10) });
-  };
-
-  const statuses = getIntakeStatuses(ingestions, lang, now);
-  const summary = getTodaySummary(ingestions, riskFactors, lang, now);
+  const todayIngestions = buildTodayIngestions(ingestions, treatments, now);
+  const statuses = getIntakeStatuses(todayIngestions, lang, now);
+  const summary = getTodaySummary(todayIngestions, riskFactors, lang, now);
 
   const risk = summary.risk;
-  const statusTitle = risk
-    ? risk.level === 'high'
-      ? t('riskHigh')
-      : t('riskCaution')
-    : t('noRiskMix');
+  const statusTitle = risk ? (risk.level === 'high' ? t('riskHigh') : t('riskCaution')) : t('noRiskMix');
   const statusSub = risk
     ? `${risk.a} + ${risk.b}`
     : `${summary.activeCount} ${summary.activeCount > 1 ? t('activeSubstancesPlural') : t('activeSubstances')}`;
@@ -75,20 +60,13 @@ export default function Today({ t, onAdd }: { t: T; onAdd: () => void }) {
         <div className="pt-6 px-5 pb-2 text-[20px] font-bold">{t('myIntakes')}</div>
 
         {statuses.length === 0 ? (
-          <div className="mx-4 bg-white rounded-card px-4 py-5 text-[15px] text-muted flex flex-col gap-3">
-            <span>{t('noIntakesYet')}</span>
-            <button
-              onClick={seedDemo}
-              className="self-start text-[13px] font-semibold text-navy underline underline-offset-2"
-            >
-              {lang === 'fr' ? 'Charger un exemple (démo)' : 'Load a demo example'}
-            </button>
-          </div>
+          <div className="mx-4 bg-white rounded-card px-4 py-5 text-[15px] text-muted">{t('noIntakesYet')}</div>
         ) : (
           <div className="mx-4 bg-white rounded-card flex flex-col">
             {statuses.map((st, idx) => {
               const taken = st.ingestion.time <= now;
               const showWaitRow = st.waiting && st.nextDoseAt != null;
+              const isTreatment = isTreatmentId(st.ingestion.id);
               return (
                 <div key={st.ingestion.id}>
                   {/* Taken row */}
@@ -100,21 +78,20 @@ export default function Today({ t, onAdd }: { t: T; onAdd: () => void }) {
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: '#E3E6F3' }}>
                       <PillIcon size={22} color={st.color} />
                     </div>
-                    <div className="flex-grow flex flex-col gap-0.5">
-                      <div className="text-[16px] font-semibold">
+                    <div className="flex-grow flex flex-col gap-0.5 min-w-0">
+                      <div className="text-[16px] font-semibold truncate">
                         {st.displayName}
                         {st.ingestion.dose != null ? ` ${st.ingestion.dose} ${st.ingestion.unit}` : ''}
                       </div>
-                      <div className="text-[13px] text-muted">
-                        {st.isActive
-                          ? `${t('taken')} · ${formatTime(st.ingestion.time)}`
-                          : formatTime(st.ingestion.time)}
+                      <div className="text-[13px] text-muted truncate">
+                        {isTreatment
+                          ? `${lang === 'fr' ? 'Traitement de fond' : 'Daily treatment'} · ${formatTime(st.ingestion.time)}`
+                          : st.isActive
+                            ? `${t('taken')} · ${formatTime(st.ingestion.time)}`
+                            : formatTime(st.ingestion.time)}
                       </div>
                     </div>
-                    <div
-                      className="px-[10px] py-1.5 rounded-xl text-[13px] font-semibold"
-                      style={{ background: '#DDF4F1', color: '#0E6158' }}
-                    >
+                    <div className="px-[10px] py-1.5 rounded-xl text-[13px] font-semibold" style={{ background: '#DDF4F1', color: '#0E6158' }}>
                       {taken ? t('taken') : t('later')}
                     </div>
                   </div>
@@ -125,8 +102,8 @@ export default function Today({ t, onAdd }: { t: T; onAdd: () => void }) {
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: '#FDEBDA' }}>
                         <ClockIcon size={22} color="#8A4A0F" />
                       </div>
-                      <div className="flex-grow flex flex-col gap-0.5">
-                        <div className="text-[16px] font-semibold">
+                      <div className="flex-grow flex flex-col gap-0.5 min-w-0">
+                        <div className="text-[16px] font-semibold truncate">
                           {st.displayName} · {lang === 'fr' ? 'prochaine prise' : 'next dose'}
                         </div>
                         <div className="text-[13px] text-muted">
