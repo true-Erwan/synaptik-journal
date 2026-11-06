@@ -153,6 +153,44 @@
               class="hidden text-[9.5px] px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium transition">1x</button>
           </div>
 
+                    <!-- Barre de simulation et de défilement temporel -->
+          <div id="timeline-time-controls"
+            class="bg-slate-950/80 border border-slate-800/90 rounded-xl px-3 py-2 flex items-center justify-between gap-1.5 flex-wrap">
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] font-semibold text-slate-300 flex items-center gap-1" id="txt-sim-time-title">
+                <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Temps :</span>
+              </span>
+              <span id="sim-time-status" class="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">Maintenant (T=0)</span>
+            </div>
+
+            <div class="flex items-center gap-1">
+              <button onclick="advanceSimulationTime(-60)"
+                class="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 font-mono text-[9.5px] transition"
+                title="Reculer d'1 heure">−1h</button>
+              <button onclick="advanceSimulationTime(-15)"
+                class="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 font-mono text-[9.5px] transition"
+                title="Reculer de 15 minutes">−15m</button>
+              <button onclick="toggleSimulationPlayback()" id="btn-sim-play"
+                class="px-2 py-0.5 rounded bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/50 text-indigo-300 font-semibold text-[10px] flex items-center gap-1 transition"
+                title="Défilement accéléré (1s = 1min)">
+                <span id="icon-sim-play">▶</span>
+                <span id="txt-sim-play">Défiler (x60)</span>
+              </button>
+              <button onclick="advanceSimulationTime(15)"
+                class="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 font-mono text-[9.5px] transition"
+                title="Avancer de 15 minutes">+15m</button>
+              <button onclick="advanceSimulationTime(60)"
+                class="px-1.5 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-300 font-mono text-[9.5px] transition"
+                title="Avancer d'1 heure">+1h</button>
+              <button onclick="resetSimulationTime()" id="btn-sim-reset"
+                class="hidden px-1.5 py-0.5 rounded bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-semibold text-[9.5px] transition"
+                title="Revenir à l'instant présent (T=0)">T=0</button>
+            </div>
+          </div>
+
           <!-- Légende multi-courbes dynamique (issue du composant de la fiche molécule) -->
           <div id="journal-timeline-legend"
             class="hidden bg-slate-950/75 border border-slate-800/90 rounded-xl p-2.5 space-y-1.5">
@@ -982,6 +1020,18 @@
           : 'px-2.5 py-1 rounded-lg text-[10px] font-medium border transition bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200';
       }
     }
+    // Gestion du temps réel et de la simulation de défilement
+    const sessionBaseTimestamp = Date.now();
+    let virtualTimeOffsetMs = 0; // Décalage temporel virtuel simulé (en ms)
+    let isSimulatingPlayback = false;
+    let simulationPlayInterval = null;
+    let timelinePanMin = 0; // Défilement / Panoramique manuel horizontal (en minutes)
+    let totalTimelineWidthMin = 360;
+
+    function getNowTime() {
+      return Date.now() + virtualTimeOffsetMs;
+    }
+
     let ingestions = [
       {
         id: 1,
@@ -989,7 +1039,13 @@
         dose: 1000,
         unit: 'mg',
         route: 'oral',
-        timeOffsetMinutes: -90
+        timestamp: sessionBaseTimestamp - 90 * 60000,
+        timeOffsetMinutes: -90,
+        intakes: [{
+          dose: 1000,
+          timestamp: sessionBaseTimestamp - 90 * 60000,
+          timeOffsetMinutes: -90
+        }]
       },
       {
         id: 2,
@@ -997,7 +1053,13 @@
         dose: 400,
         unit: 'mg',
         route: 'oral',
-        timeOffsetMinutes: -30
+        timestamp: sessionBaseTimestamp - 30 * 60000,
+        timeOffsetMinutes: -30,
+        intakes: [{
+          dose: 400,
+          timestamp: sessionBaseTimestamp - 30 * 60000,
+          timeOffsetMinutes: -30
+        }]
       }
     ];
 
@@ -1005,15 +1067,92 @@
       'Alcohol', 'Lithium', 'NSAIDs', 'SSRIs'
     ]);
 
-    // Clock
+    // Clock & Dynamic Timeline Engine
     function updateClock() {
-      const now = new Date();
+      const now = new Date(getNowTime());
       const h = String(now.getHours()).padStart(2, '0');
       const m = String(now.getMinutes()).padStart(2, '0');
-      document.getElementById('clock').textContent = `${h}:${m}`;
+      const clockEl = document.getElementById('clock');
+      if (clockEl) clockEl.textContent = `${h}:${m}`;
     }
     setInterval(updateClock, 1000);
     updateClock();
+
+    function advanceSimulationTime(minutes) {
+      virtualTimeOffsetMs += minutes * 60000;
+      updateSimulationUI();
+      drawTimeline();
+      renderIngestions();
+    }
+
+    function resetSimulationTime() {
+      virtualTimeOffsetMs = 0;
+      timelinePanMin = 0;
+      if (isSimulatingPlayback) toggleSimulationPlayback();
+      updateSimulationUI();
+      drawTimeline();
+      renderIngestions();
+    }
+
+    function toggleSimulationPlayback() {
+      isSimulatingPlayback = !isSimulatingPlayback;
+      const btn = document.getElementById('btn-sim-play');
+      const icon = document.getElementById('icon-sim-play');
+      const txt = document.getElementById('txt-sim-play');
+      if (isSimulatingPlayback) {
+        if (btn) btn.className = 'px-2 py-0.5 rounded bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-500/50 text-emerald-300 font-semibold text-[10px] flex items-center gap-1 transition animate-pulse';
+        if (icon) icon.textContent = '⏸';
+        if (txt) txt.textContent = currentLang === 'fr' ? 'Pause' : 'Pause';
+        simulationPlayInterval = setInterval(() => {
+          // 1 seconde réelle = 1 minute simulée (60x) -> toutes les 250ms, avance de 15 secondes
+          virtualTimeOffsetMs += 15000;
+          updateSimulationUI();
+          drawTimeline();
+          renderIngestions();
+        }, 250);
+      } else {
+        if (simulationPlayInterval) {
+          clearInterval(simulationPlayInterval);
+          simulationPlayInterval = null;
+        }
+        if (btn) btn.className = 'px-2 py-0.5 rounded bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/50 text-indigo-300 font-semibold text-[10px] flex items-center gap-1 transition';
+        if (icon) icon.textContent = '▶';
+        if (txt) txt.textContent = currentLang === 'fr' ? 'Défiler (x60)' : 'Play (x60)';
+      }
+    }
+
+    function updateSimulationUI() {
+      const statusEl = document.getElementById('sim-time-status');
+      const resetBtn = document.getElementById('btn-sim-reset');
+      const nowSim = new Date(getNowTime());
+      const timeStr = nowSim.toTimeString().slice(0, 5);
+      const offMin = Math.round(virtualTimeOffsetMs / 60000);
+      if (statusEl) {
+        if (offMin === 0 && Math.abs(timelinePanMin) < 1) {
+          statusEl.textContent = currentLang === 'fr' ? `Maintenant (${timeStr})` : `Now (${timeStr})`;
+          statusEl.className = 'text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400';
+        } else {
+          const sign = offMin > 0 ? `+${offMin}m` : (offMin < 0 ? `${offMin}m` : '');
+          const panStr = Math.abs(timelinePanMin) >= 1 ? ` • ↔ ${timelinePanMin > 0 ? '+' : ''}${Math.round(timelinePanMin)}m` : '';
+          statusEl.textContent = `⏱ ${timeStr} (${sign || 'T=0'}${panStr})`;
+          statusEl.className = 'text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold';
+        }
+      }
+      if (resetBtn) {
+        if (offMin !== 0 || Math.abs(timelinePanMin) >= 1) resetBtn.classList.remove('hidden');
+        else resetBtn.classList.add('hidden');
+      }
+      updateClock();
+    }
+
+    // Ticker automatique en arrière-plan toutes les 5 secondes (pour l'écoulement naturel du temps)
+    setInterval(() => {
+      if (!isSimulatingPlayback) {
+        updateSimulationUI();
+        drawTimeline();
+        renderIngestions();
+      }
+    }, 5000);
 
     // Language Toggle
     function toggleLanguage() {
@@ -3512,7 +3651,7 @@
       const newSubIntake = {
         dose: dose,
         timeOffsetMinutes: offsetMin,
-        timestamp: Date.now() + offsetMin * 60000
+        timestamp: getNowTime() + offsetMin * 60000
       };
 
       if (existingIdx !== -1) {
@@ -3568,8 +3707,8 @@
       onQuickSubstanceChange();
     }
 
-    function formatOffsetTimeStr(off) {
-      const intakeDate = new Date(Date.now() + (off || 0) * 60000);
+    function formatOffsetTimeStr(off, timestamp) {
+      const intakeDate = timestamp ? new Date(timestamp) : new Date(getNowTime() + (off || 0) * 60000);
       const timeExactStr = intakeDate.toTimeString().slice(0, 5);
       if (!off || off === 0) {
         return currentLang === 'fr' ? `À l'instant (${timeExactStr})` : `Just now (${timeExactStr})`;
@@ -3686,7 +3825,10 @@
           ? ing.intakes
           : [{ dose: ing.dose, timeOffsetMinutes: ing.timeOffsetMinutes || 0 }];
 
-        let timeStr = formatOffsetTimeStr(ing.timeOffsetMinutes || 0);
+        const currentOffset = ing.timestamp
+          ? Math.round((ing.timestamp - getNowTime()) / 60000)
+          : (ing.timeOffsetMinutes || 0);
+        let timeStr = formatOffsetTimeStr(currentOffset, ing.timestamp);
         let cumulBadgeHtml = '';
         if (intakesList.length > 1) {
           const partsStr = intakesList.map(it => `${it.dose}${ing.unit}`).join(' + ');
@@ -3784,8 +3926,15 @@
         adjustTimelineXZoom(delta);
       }, { passive: false });
 
+      let dragStartX = null;
+      let dragStartPan = 0;
+      let hasDraggedPan = false;
+
       canvas.addEventListener('pointerdown', (e) => {
         isPointerDownOnTimeline = true;
+        dragStartX = e.clientX;
+        dragStartPan = timelinePanMin;
+        hasDraggedPan = false;
         if (canvas.setPointerCapture) {
           try { canvas.setPointerCapture(e.pointerId); } catch (_) { }
         }
@@ -3793,13 +3942,29 @@
       });
 
       canvas.addEventListener('pointermove', (e) => {
+        if (isPointerDownOnTimeline && dragStartX !== null) {
+          const dx = e.clientX - dragStartX;
+          if (Math.abs(dx) > 6) {
+            hasDraggedPan = true;
+            const rect = canvas.getBoundingClientRect();
+            const minPerPx = totalTimelineWidthMin / Math.max(10, rect.width - 48);
+            timelinePanMin = dragStartPan - (dx * minPerPx);
+            updateSimulationUI();
+            drawTimeline();
+            return;
+          }
+        }
         if (isPointerDownOnTimeline || e.pointerType === 'mouse') {
           updateTouchPos(e.clientX);
         }
       });
 
-      canvas.addEventListener('pointerup', () => {
+      canvas.addEventListener('pointerup', (e) => {
         isPointerDownOnTimeline = false;
+        dragStartX = null;
+        if (canvas.releasePointerCapture) {
+          try { canvas.releasePointerCapture(e.pointerId); } catch (_) { }
+        }
       });
 
       canvas.addEventListener('pointerleave', () => {
@@ -4013,7 +4178,9 @@
           : [{ dose: ing.dose, timeOffsetMinutes: ing.timeOffsetMinutes || 0 }];
 
         subIntakes.forEach(subIt => {
-          const tIng = subIt.timeOffsetMinutes || 0;
+          const tIng = subIt.timestamp
+            ? Math.round((subIt.timestamp - getNowTime()) / 60000)
+            : (subIt.timeOffsetMinutes || 0);
           const tierResp = computeTierResponse(subIt.dose, d, heavyRef);
           const singleDoseRatio = Math.max(0.06, tierResp * powerFactor);
 
@@ -4125,18 +4292,19 @@
         };
       });
 
-      // Fenêtre temporelle de base
+      // Fenêtre temporelle de base avec prise en compte du Zoom et du Défilement (Pan)
       const basePastMin = Math.min(-120, ...substanceGroups.map(g => g.minStartMin - 60));
       const baseFutureMin = Math.max(360, ...substanceGroups.map(g => g.maxEndMin + 30));
 
-      const visiblePastMin = basePastMin / timelineXZoom;
-      const visibleFutureMin = baseFutureMin / timelineXZoom;
+      const visiblePastMin = (basePastMin / timelineXZoom) + timelinePanMin;
+      const visibleFutureMin = (baseFutureMin / timelineXZoom) + timelinePanMin;
 
       const startHour = Math.floor(visiblePastMin / 60);
       const endHour = Math.ceil(visibleFutureMin / 60);
       const graphStartMin = startHour * 60;
       const graphEndMin = endHour * 60;
       const totalGraphMin = Math.max(graphEndMin - graphStartMin, 30);
+      totalTimelineWidthMin = totalGraphMin;
 
       const leftPad = 24;
       const rightPad = 24;
