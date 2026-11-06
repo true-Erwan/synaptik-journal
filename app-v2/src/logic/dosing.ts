@@ -3,6 +3,7 @@
 // and extended with the curated MEDICAL_SCHEDULE (min delays + 24h caps from MODIFICATIONS.md §1).
 import type { Lang, Substance, Ingestion } from './types';
 import { NON_DIVERTIBLE_DOSES, MEDICAL_SCHEDULE, getSubstanceByName } from './data';
+import { buildCurve, wavesForForm } from './effectCurve';
 
 const multToMin: Record<string, number> = {
   seconds: 1 / 60,
@@ -78,6 +79,17 @@ export interface DoseTier {
   tone: 'ok' | 'info' | 'caution' | 'danger';
 }
 
+/**
+ * Prescribed dose quick-pick chips for a medicine, sourced ONLY from the curated
+ * MEDICAL_SCHEDULE (labelled "Dose prescrite"). Returns [] for substances without a
+ * schedule entry (so recreational/misuse substances never show dose chips).
+ */
+export function getPrescribedDoses(substanceName: string): { value: number; units: string }[] {
+  const sched = MEDICAL_SCHEDULE[substanceName];
+  if (!sched || !sched.doses) return [];
+  return sched.doses.map((v) => ({ value: v, units: sched.units }));
+}
+
 /** Classify a dose for a non-divertible medicine (medical vocabulary only). */
 export function getMedicalDoseTier(
   substanceName: string,
@@ -112,9 +124,19 @@ function roaTotalMinutes(s: Substance, route: string): number | null {
 
 /**
  * Minimum delay (hours) before the next intake is allowed.
- * Uses the curated MEDICAL_SCHEDULE when available, else falls back to roa.duration.total.
+ *
+ * Priority:
+ *  1. If a release form is selected, follow that form's effect-curve duration
+ *     (so LP forms correctly space the next dose to 12h / 24h).
+ *  2. Else use the curated MEDICAL_SCHEDULE (per-molecule min delay).
+ *  3. Else fall back to roa.duration.total.
  */
-export function getMinDelayHours(substanceName: string, route = 'oral'): number | null {
+export function getMinDelayHours(substanceName: string, route = 'oral', releaseProfileId?: string): number | null {
+  if (releaseProfileId) {
+    const waves = wavesForForm(substanceName, releaseProfileId);
+    const model = buildCurve(substanceName, route, 1, '#000', waves);
+    if (model) return Math.round((model.endMin / 60) * 10) / 10;
+  }
   const sched = MEDICAL_SCHEDULE[substanceName];
   if (sched) return sched.minDelayHours;
   const s = getSubstanceByName(substanceName, 'en');
@@ -128,8 +150,9 @@ export function getNextDoseTime(
   substanceName: string,
   lastIntakeMs: number,
   route = 'oral',
+  releaseProfileId?: string,
 ): number | null {
-  const h = getMinDelayHours(substanceName, route);
+  const h = getMinDelayHours(substanceName, route, releaseProfileId);
   if (h == null) return null;
   return lastIntakeMs + h * 3600_000;
 }

@@ -2,7 +2,7 @@
 // their status (taken / wait), and the next-dose-possible time.
 import type { Ingestion, Lang } from './types';
 import { getSubstanceByName, displayName } from './data';
-import { buildCurve } from './effectCurve';
+import { curveForIngestion } from './effectCurve';
 import { getNextDoseTime, isDivertible } from './dosing';
 import { checkMix } from './interactions';
 
@@ -28,6 +28,7 @@ export interface TreatmentLike {
   unit: string;
   hour: number;
   minute: number;
+  releaseProfileId?: string;
 }
 
 /**
@@ -56,6 +57,7 @@ export function buildTodayIngestions(
       dose: t.dose,
       unit: t.unit,
       time: d.getTime(),
+      releaseProfileId: t.releaseProfileId,
     };
   });
 
@@ -78,12 +80,14 @@ export function getIntakeStatuses(
     .map((ing) => {
       const s = getSubstanceByName(ing.substanceName, lang);
       const color = s?.color || '#1E2A5A';
-      const curve = buildCurve(ing.substanceName, ing.route, ing.dose, color);
+      const curve = curveForIngestion(ing, color);
       const elapsedMin = (now - ing.time) / 60000;
       const isActive = curve ? elapsedMin >= 0 && elapsedMin <= curve.endMin : false;
 
       // Next-dose delay only applies to medicines (divertible substances have no shown schedule).
-      const nextDoseAt = isDivertible(s) ? null : getNextDoseTime(ing.substanceName, ing.time, ing.route);
+      const nextDoseAt = isDivertible(s)
+        ? null
+        : getNextDoseTime(ing.substanceName, ing.time, ing.route, ing.releaseProfileId);
       const waiting = nextDoseAt != null && now < nextDoseAt;
 
       return {

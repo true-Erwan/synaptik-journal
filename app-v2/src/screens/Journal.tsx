@@ -3,7 +3,7 @@ import { useStore } from '../store';
 import type { T } from '../i18n';
 import { formatTime } from '../ui/format';
 import { buildTodayIngestions, getIntakeStatuses, isTreatmentId, localizedName } from '../logic/today';
-import { buildCurve } from '../logic/effectCurve';
+import { curveForIngestion } from '../logic/effectCurve';
 import { getSubstanceByName } from '../logic/data';
 
 const W = 326;
@@ -48,7 +48,7 @@ export default function Journal({ t }: { t: T }) {
     .map((ing) => {
       const sub = getSubstanceByName(ing.substanceName, 'en');
       const color = sub?.color || '#1E2A5A';
-      const model = buildCurve(ing.substanceName, ing.route, ing.dose, color);
+      const model = curveForIngestion(ing, color);
       if (!model) return null;
       const pts: string[] = [];
       const steps = 80;
@@ -185,7 +185,7 @@ export default function Journal({ t }: { t: T }) {
           <div className="mx-4 bg-white rounded-card flex flex-col mb-6">
             {history.map((st, idx) => {
               const sub = getSubstanceByName(st.ingestion.substanceName, 'en');
-              const curve = buildCurve(st.ingestion.substanceName, st.ingestion.route, st.ingestion.dose, sub?.color || '#1E2A5A');
+              const curve = curveForIngestion(st.ingestion, sub?.color || '#1E2A5A');
               const peakMs = curve ? st.ingestion.time + curve.peakMin * 60000 : null;
               const endMs = curve ? st.ingestion.time + curve.endMin * 60000 : null;
               const treatment = isTreatmentId(st.ingestion.id);

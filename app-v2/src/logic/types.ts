@@ -74,6 +74,7 @@ export interface MedicalScheduleEntry {
   maxPerIntake: number;
   maxPer24h: number;
   units: string;
+  doses?: number[]; // prescribed quick-pick steps shown as "Dose prescrite" chips
 }
 
 // Per-route medical dose tiers for non-divertible medicines
@@ -99,4 +100,6 @@ export interface Ingestion {
   unit: string;
   // Absolute timestamp (ms) of the intake. May be in the past or future.
   time: number;
+  // Selected release form id (e.g. 'IR', 'OXYCONTIN_LP_12H'). Optional.
+  releaseProfileId?: string;
 }

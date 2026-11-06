@@ -18,6 +18,7 @@ export interface PendingIntake {
   dose: number | null;
   unit: string;
   time: number;
+  releaseProfileId?: string;
 }
 
 type Route =

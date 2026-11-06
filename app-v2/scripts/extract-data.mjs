@@ -108,4 +108,40 @@ if (ndMarker !== -1) {
   }
 }
 
+// --- RELEASE_PROFILES_CATALOG (release forms / LP matrices per substance) ---
+function sliceBalancedObjectAfter(source, marker) {
+  const idx = source.indexOf(marker);
+  if (idx === -1) throw new Error(`Marker not found: ${marker}`);
+  const start = source.indexOf('{', idx);
+  let depth = 0, inStr = false, strCh = '', esc = false;
+  for (let i = start; i < source.length; i++) {
+    const c = source[i];
+    if (inStr) {
+      if (esc) { esc = false; continue; }
+      if (c === '\\') { esc = true; continue; }
+      if (c === strCh) inStr = false;
+      continue;
+    }
+    if (c === '"' || c === "'") { inStr = true; strCh = c; continue; }
+    if (c === '{') depth++;
+    else if (c === '}') { depth--; if (depth === 0) return source.slice(start, i + 1); }
+  }
+  throw new Error('Unbalanced object for ' + marker);
+}
+
+const relText = sliceBalancedObjectAfter(html, 'const RELEASE_PROFILES_CATALOG');
+// The catalog is a plain JS object literal with apostrophe-heavy French strings.
+// Rather than regex it into JSON (brittle with quotes), evaluate the literal in a
+// sandboxed Function. The source is a trusted local file and this is a build-time
+// one-off, so this is safe here.
+try {
+  // eslint-disable-next-line no-new-func
+  const catalog = Function(`"use strict"; return (${relText});`)();
+  writeFileSync(resolve(OUT_DIR, 'releaseProfiles.json'), JSON.stringify(catalog, null, 2));
+  const n = catalog.specific ? Object.keys(catalog.specific).length : 0;
+  console.log(`RELEASE_PROFILES_CATALOG: ${n} substances with release forms`);
+} catch (e) {
+  console.warn('Could not parse RELEASE_PROFILES_CATALOG:', e.message);
+}
+
 console.log('Extraction complete ->', OUT_DIR);

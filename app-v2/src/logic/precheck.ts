@@ -34,6 +34,7 @@ export function preCheck(
   riskFactors: string[],
   lang: Lang,
   now = Date.now(),
+  releaseProfileId?: string,
 ): PreCheckResult {
   // 1. Interaction mix vs. active substances + background risk factors.
   const activeNames = Array.from(
@@ -55,7 +56,7 @@ export function preCheck(
 
   // 2. Minimum delay since the last dose of the SAME substance.
   let delay: DelayWarning | null = null;
-  const minH = getMinDelayHours(newName, route);
+  const minH = getMinDelayHours(newName, route, releaseProfileId);
   if (minH != null) {
     const last = ingestions
       .filter((i) => i.substanceName === newName)
