@@ -1,0 +1,332 @@
+:root {
+  --bg-outer: #07080c;
+  --bg-frame: #0f1117;
+  --bg-screen: #0b0d13;
+  --bg-card: #151821;
+  --bg-well: #0d0f15;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
+}
+
+html.theme-light {
+  --bg-outer: #e5dec9;
+  --bg-frame: #faf6ee;
+  --bg-screen: #f5f0e6;
+  --bg-card: #fffdf8;
+  --bg-well: #ede6d8;
+  --border-subtle: #e2dac9;
+  --border-strong: #cfc5b1;
+  --text-primary: #1c1917;
+  --text-secondary: #44403c;
+  --text-muted: #6b655e;
+  --shadow-card: 0 2px 14px -2px rgba(42, 34, 22, 0.07);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-outer) !important;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s ease, color 0.2s ease;
+}
+
+.phone-frame {
+  background-color: var(--bg-frame) !important;
+  box-shadow:
+    0 28px 60px -14px rgba(0, 0, 0, 0.65),
+    0 0 0 11px #1d2028,
+    0 0 0 13px #2e3340;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+html.theme-light .phone-frame {
+  box-shadow:
+    0 26px 55px -14px rgba(62, 50, 32, 0.22),
+    0 0 0 11px #d8d0c0,
+    0 0 0 13px #c5bba7;
+}
+
+#screen-container {
+  background-color: var(--bg-screen) !important;
+}
+
+html.theme-light [class*="bg-slate-900"] {
+  background-color: var(--bg-card) !important;
+  box-shadow: var(--shadow-card);
+}
+
+html.theme-light [class*="bg-slate-950"] {
+  background-color: var(--bg-well) !important;
+}
+
+html.theme-light [class*="bg-slate-800"] {
+  background-color: #e5ddd0 !important;
+}
+
+html.theme-light [class*="bg-slate-700"] {
+  background-color: #d6ccb8 !important;
+}
+
+html.theme-light [class*="hover:bg-slate-800"]:hover,
+html.theme-light [class*="hover:bg-slate-700"]:hover {
+  background-color: #dbd2c2 !important;
+}
+
+html.theme-light [class*="bg-indigo-950"],
+html.theme-light [class*="bg-indigo-900"],
+html.theme-light [class*="bg-indigo-800"] {
+  background-color: #e6e3fc !important;
+}
+
+html.theme-light [class*="bg-violet-950"],
+html.theme-light [class*="bg-violet-900"] {
+  background-color: #ede5fc !important;
+}
+
+html.theme-light [class*="bg-blue-950"] {
+  background-color: #dbeafe !important;
+}
+
+html.theme-light [class*="bg-cyan-950"],
+html.theme-light [class*="bg-cyan-900"] {
+  background-color: #d8f3f9 !important;
+}
+
+html.theme-light [class*="bg-emerald-950"],
+html.theme-light [class*="bg-emerald-900"] {
+  background-color: #d7f4e6 !important;
+}
+
+html.theme-light [class*="bg-amber-950"],
+html.theme-light [class*="bg-amber-900"] {
+  background-color: #fae9c8 !important;
+}
+
+html.theme-light [class*="bg-orange-950"],
+html.theme-light [class*="bg-orange-900"] {
+  background-color: #fce3cf !important;
+}
+
+html.theme-light [class*="bg-rose-950"],
+html.theme-light [class*="bg-rose-900"],
+html.theme-light [class*="bg-red-950"] {
+  background-color: #fce0e4 !important;
+}
+
+html.theme-light [class*="bg-indigo-500/"] {
+  background-color: #e6e3fc !important;
+}
+
+html.theme-light [class*="bg-amber-500/"] {
+  background-color: #fef0d1 !important;
+}
+
+html.theme-light [class*="bg-emerald-500/"] {
+  background-color: #dcf7e9 !important;
+}
+
+html.theme-light [class*="bg-rose-500/"],
+html.theme-light [class*="bg-red-500/"] {
+  background-color: #fde3e7 !important;
+}
+
+html.theme-light [class*="border-slate-800"] {
+  border-color: var(--border-subtle) !important;
+}
+
+html.theme-light [class*="border-slate-700"] {
+  border-color: var(--border-strong) !important;
+}
+
+html.theme-light .divide-slate-800\/80 > :not([hidden]) ~ :not([hidden]),
+html.theme-light .divide-slate-800\/60 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--border-subtle) !important;
+}
+
+html.theme-light .text-white,
+html.theme-light [class*="text-slate-100"],
+html.theme-light [class*="text-slate-200"] {
+  color: var(--text-primary) !important;
+}
+
+html.theme-light [class*="text-slate-300"] {
+  color: var(--text-secondary) !important;
+}
+
+html.theme-light [class*="text-slate-400"],
+html.theme-light [class*="text-slate-500"] {
+  color: var(--text-muted) !important;
+}
+
+html.theme-light [class*="text-indigo-100"],
+html.theme-light [class*="text-indigo-200"],
+html.theme-light [class*="text-indigo-300"],
+html.theme-light [class*="text-indigo-400"] {
+  color: #3730a3 !important;
+}
+
+html.theme-light [class*="text-violet-200"],
+html.theme-light [class*="text-violet-300"] {
+  color: #5b21b6 !important;
+}
+
+html.theme-light [class*="text-blue-300"],
+html.theme-light [class*="text-blue-400"],
+html.theme-light [class*="text-sky-300"] {
+  color: #1d4ed8 !important;
+}
+
+html.theme-light [class*="text-cyan-100"],
+html.theme-light [class*="text-cyan-200"],
+html.theme-light [class*="text-cyan-300"] {
+  color: #0e7490 !important;
+}
+
+html.theme-light [class*="text-teal-300"] {
+  color: #0f766e !important;
+}
+
+html.theme-light [class*="text-emerald-100"],
+html.theme-light [class*="text-emerald-200"],
+html.theme-light [class*="text-emerald-300"],
+html.theme-light [class*="text-emerald-400"] {
+  color: #047857 !important;
+}
+
+html.theme-light [class*="text-amber-100"],
+html.theme-light [class*="text-amber-200"],
+html.theme-light [class*="text-amber-300"],
+html.theme-light [class*="text-amber-400"] {
+  color: #92400e !important;
+}
+
+html.theme-light [class*="text-orange-100"],
+html.theme-light [class*="text-orange-200"],
+html.theme-light [class*="text-orange-300"],
+html.theme-light [class*="text-orange-400"] {
+  color: #9a3412 !important;
+}
+
+html.theme-light [class*="text-rose-100"],
+html.theme-light [class*="text-rose-200"],
+html.theme-light [class*="text-rose-300"],
+html.theme-light [class*="text-rose-400"],
+html.theme-light [class*="text-red-200"],
+html.theme-light [class*="text-red-300"],
+html.theme-light [class*="text-red-400"] {
+  color: #9f1239 !important;
+}
+
+html.theme-light .bg-indigo-600,
+html.theme-light .bg-indigo-600 *,
+html.theme-light .bg-cyan-600,
+html.theme-light .bg-cyan-600 *,
+html.theme-light .bg-emerald-600,
+html.theme-light .bg-emerald-600 *,
+html.theme-light .bg-rose-600,
+html.theme-light .bg-rose-600 *,
+html.theme-light .bg-red-600,
+html.theme-light .bg-red-600 *,
+html.theme-light .bg-gradient-to-r,
+html.theme-light .bg-gradient-to-r * {
+  color: #ffffff !important;
+}
+
+html.theme-light [class*="bg-indigo-600/"] {
+  background-color: #e6e3fc !important;
+  color: #3730a3 !important;
+}
+
+html.theme-light [class*="bg-indigo-600/"] * {
+  color: #3730a3 !important;
+}
+
+html.theme-light #substance-detail-modal,
+html.theme-light #modal-quick-calibrate {
+  background-color: rgba(28, 25, 23, 0.45) !important;
+}
+
+html.theme-light input,
+html.theme-light select {
+  color: var(--text-primary) !important;
+}
+
+html.theme-light input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.syn-accordion > summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+.syn-accordion > summary::-webkit-details-marker {
+  display: none;
+}
+
+.syn-accordion .syn-chevron {
+  transition: transform 0.2s ease;
+}
+
+.syn-accordion[open] .syn-chevron {
+  transform: rotate(180deg);
+}
+
+html.mode-simplified .expert-only-block {
+  display: none !important;
+}
+
+html.mode-simplified #screen-container {
+  font-size: 106%;
+}
+
+html.mode-simplified .ingest-card-title {
+  font-size: 13.5px !important;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.28);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.48);
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+.hidden {
+  display: none !important;
+}
